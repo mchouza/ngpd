@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="P:\poco\Util\include;P:\poco\Foundation\include"
+				AdditionalIncludeDirectories="P:\poco\Util\include;P:\poco\Foundation\include;P:\poco\Net\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="PocoFoundationd.lib PocoUtild.lib"
+				AdditionalDependencies="PocoFoundationd.lib PocoUtild.lib PocoNetd.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="p:\Poco\lib"
 				GenerateDebugInformation="true"
@@ -98,7 +98,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -118,6 +118,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="P:\poco\Util\include;P:\poco\Foundation\include;P:\poco\Net\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -136,7 +137,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="PocoFoundation.lib PocoUtil.lib PocoNet.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="p:\poco\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"

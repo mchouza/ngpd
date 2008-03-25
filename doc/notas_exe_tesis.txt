@@ -1,0 +1,17 @@
+OBJETIVOS
+=========
+- Tener funcionando un daemon con server y templates HTML. [Martes 25/3]
+- Cargar módulos en base al XML. [Miércoles 26/3]
+
+GENERALIDADES
+=============
+- Es un daemon (gpgd).
+- Se puede consultar su estado por "loopback", lo que implica que tiene info estadística en memoria.
+- Toma un "trabajo" desde APPDATA y lo ejecuta.
+- Admite límites en la RAM empleada para la población, ver como implementar.
+- Admite terminar el trabajo por tiempo o por cantidad de generaciones.
+- Admite límites en la población en cantidad de individuos.
+- Uso un sistema transaccional para actualizar los trabajos.
+- Guardo info estadística junto al trabajo.
+- El trabajo le indica qué módulos usar para cada cosa.
+- El trabajo lleva asociado un archivo ".bin" donde guarda la población.
