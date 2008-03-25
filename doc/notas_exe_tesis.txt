@@ -1,7 +1,8 @@
-OBJETIVOS
-=========
+OBJETIVOS (con tiempos)
+=======================
 - Tener funcionando un daemon con server y templates HTML. [Martes 25/3]
 - Cargar módulos en base al XML. [Miércoles 26/3]
+- Conectar configuración con la inetrafz web. Agregar transaccionalidad al manejo de archivos. [Jueves 27/3]
 
 GENERALIDADES
 =============
@@ -15,3 +16,15 @@ GENERALIDADES
 - Guardo info estadística junto al trabajo.
 - El trabajo le indica qué módulos usar para cada cosa.
 - El trabajo lleva asociado un archivo ".bin" donde guarda la población.
+
+CONFIG
+======
+- Uso como base la config de GPGD, una configuración jerárquica.
+- Tengo dos archivos: 
+  * Una configuración base, imposible de modificar por la interfaz web y que contiene cosas como paths de los templates.
+  * Una configuración modificable, que se almcane aen archivos pero puede modificarse desde la interfaz web.
+- La interfaz web tiene un "request handler" que manda todo el "processed request" (URI + datos del post) a un ReqDispatcher (junto con la ostream de salida).
+- El ReqDispatcher toma el "processed request" y puede:
+  a) Una vez procesado, enviarlo junto con la ostream a otro ReqDispatcher.
+  b) Usar un map para despacharlo junto con la ostream a un FinalReqHandler.
+- El ReqProcessor toma el request procesado y una ostream y saca por la ostream el texto de la salida.

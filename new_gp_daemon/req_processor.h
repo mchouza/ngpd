@@ -30,58 +30,27 @@
 //
 
 //=============================================================================
-// ngpd_app.cpp
+// req_processor.h
 //-----------------------------------------------------------------------------
 // Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
 //=============================================================================
 
-#include <Poco/Net/HTTPServer.h>
-#include <Poco/Net/HTTPServerParams.h>
-#include "ngpd_app.h"
-#include "req_handler_factory.h"
+#ifndef REQ_PROCESSOR_H
+#define REQ_PROCESSOR_H
 
-using namespace Core;
+#include <ostream>
 
-void NGPDApp::initialize(Poco::Util::Application& self)
+namespace WebInterface
 {
-	// Llamo a la implementación de la clase base
-	ServerApplication::initialize(self);
-
-	// Indico que estoy inicializando
-	logger().information("Iniciando NGPD (New Genetic Programming Daemon)...");
-}
-
-void NGPDApp::uninitialize()
-{
-	// Indico que estoy inicializando
-	logger().information("Terminando la ejecución...");
-
-	// Llamo a la implementación de la clase base
-	ServerApplication::uninitialize();
-}
-
-int NGPDApp::main(const std::vector<std::string>& args)
-{
-	using Poco::Net::HTTPServer;
-	using Poco::Net::ServerSocket;
-
-	// Creo el socket de escucha
-	// FIXME: Hacer configurable
-	ServerSocket srvSocket(1234);
+	// Forward
+	class ProcReq;
 	
-	// Creo el servidor
-	HTTPServer server(new WebInterface::ReqHandlerFactory(), srvSocket, 
-		new Poco::Net::HTTPServerParams());
-	
-	// Lo arranco
-	server.start();
-
-	// Espero
-	waitForTerminationRequest();
-
-	// Detengo el server
-	server.stop();
-
-	// Terminé OK
-	return NGPDApp::EXIT_OK;
+	/// Base abstracta para las clases encargadas de procesar los pedidos HTTP
+	class ReqProcessor
+	{
+		/// Toma el ProcReq y devuelve los datos que correspondan por la stream
+		virtual void process(const ProcReq& procReq, std::ostream& os) = 0;
+	};
 }
+
+#endif
