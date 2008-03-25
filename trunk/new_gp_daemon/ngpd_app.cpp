@@ -13,8 +13,8 @@
 //      documentation and/or other materials provided with the distribution.
 //
 //    * The names of the contributors may not be used to endorse or promote
-//       products derived from this software without specific prior written
-//       permission.
+//      products derived from this software without specific prior written
+//      permission.
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 // AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -35,9 +35,49 @@
 // Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
 //=============================================================================
 
+#include <iostream>
+#include <Poco/Net/HTTPRequestHandler.h>
+#include <Poco/Net/HTTPRequestHandlerFactory.h>
+#include <Poco/Net/HTTPServer.h>
+#include <Poco/Net/HTTPServerParams.h>
+#include <Poco/Net/HTTPServerRequest.h>
+#include <Poco/Net/HTTPServerResponse.h>
 #include "ngpd_app.h"
 
 using namespace Core;
+
+namespace
+{
+	// FIXME: Va a ser complejo, no este stub
+	class MyHTTPRequestHandler : public Poco::Net::HTTPRequestHandler
+	{
+	public:
+		virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
+			Poco::Net::HTTPServerResponse& response)
+		{
+			static int i = 0;
+			
+			response.setChunkedTransferEncoding(true);
+			response.setContentType("text/plain");
+			response.send() << "Test N° " << ++i << "\nURI: " << 
+				request.getURI();
+		}
+	};
+	
+	/// Construye los objetos que atienden a los clientes HTTP
+	class MyHTTPRequestHandlerFactory : 
+		public Poco::Net::HTTPRequestHandlerFactory
+	{
+	public:
+		/// Maneja la creación del objeto que atiende
+		virtual Poco::Net::HTTPRequestHandler*
+			createRequestHandler(const Poco::Net::HTTPServerRequest & request)
+		{
+			// FIXME: Devolver un request handler "de en serio"
+			return new MyHTTPRequestHandler();
+		}
+	};
+}
 
 void NGPDApp::initialize(Poco::Util::Application& self)
 {
@@ -59,8 +99,25 @@ void NGPDApp::uninitialize()
 
 int NGPDApp::main(const std::vector<std::string>& args)
 {
+	using Poco::Net::HTTPServer;
+	using Poco::Net::ServerSocket;
+
+	// Creo el socket de escucha
+	// FIXME: Hacer configurable
+	ServerSocket srvSocket(1234);
+	
+	// Creo el servidor
+	HTTPServer server(new MyHTTPRequestHandlerFactory(), srvSocket, 
+		new Poco::Net::HTTPServerParams());
+	
+	// Lo arranco
+	server.start();
+
 	// Espero
 	waitForTerminationRequest();
+
+	// Detengo el server
+	server.stop();
 
 	// Terminé OK
 	return NGPDApp::EXIT_OK;
