@@ -30,58 +30,40 @@
 //
 
 //=============================================================================
-// ngpd_app.cpp
+// req_handler.h
 //-----------------------------------------------------------------------------
 // Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
 //=============================================================================
 
-#include <Poco/Net/HTTPServer.h>
-#include <Poco/Net/HTTPServerParams.h>
-#include "ngpd_app.h"
-#include "req_handler_factory.h"
+#ifndef REQ_HANDLER_H
+#define REQ_HANDLER_H
 
-using namespace Core;
+#include <boost/shared_ptr.hpp>
+#include <Poco/Net/HTTPRequestHandler.h>
 
-void NGPDApp::initialize(Poco::Util::Application& self)
+namespace WebInterface
 {
-	// Llamo a la implementación de la clase base
-	ServerApplication::initialize(self);
-
-	// Indico que estoy inicializando
-	logger().information("Iniciando NGPD (New Genetic Programming Daemon)...");
-}
-
-void NGPDApp::uninitialize()
-{
-	// Indico que estoy inicializando
-	logger().information("Terminando la ejecución...");
-
-	// Llamo a la implementación de la clase base
-	ServerApplication::uninitialize();
-}
-
-int NGPDApp::main(const std::vector<std::string>& args)
-{
-	using Poco::Net::HTTPServer;
-	using Poco::Net::ServerSocket;
-
-	// Creo el socket de escucha
-	// FIXME: Hacer configurable
-	ServerSocket srvSocket(1234);
+	// Forward
+	class ReqDispatcher;
 	
-	// Creo el servidor
-	HTTPServer server(new WebInterface::ReqHandlerFactory(), srvSocket, 
-		new Poco::Net::HTTPServerParams());
-	
-	// Lo arranco
-	server.start();
+	/// Se ocupa de atender los pedidos HTTP y mandarlos hacia donde 
+	/// corresponda
+	class ReqHandler : public Poco::Net::HTTPRequestHandler
+	{
+		/// Dispatcher base
+		boost::shared_ptr<ReqDispatcher> pBaseReqDispatcher_;
 
-	// Espero
-	waitForTerminationRequest();
+	public:
+		/// Constructor
+		ReqHandler();
 
-	// Detengo el server
-	server.stop();
+		/// Destructor
+		virtual ~ReqHandler();
 
-	// Terminé OK
-	return NGPDApp::EXIT_OK;
+		/// Toma el request y lo envía para ser procesado
+		virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
+			Poco::Net::HTTPServerResponse& response);
+	};
 }
+
+#endif
