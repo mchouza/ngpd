@@ -40,10 +40,11 @@
 #include "proc_request.h"
 #include "req_dispatcher.h"
 #include "req_handler.h"
+#include "root_req_dispatcher.h"
 
 using namespace WebInterface;
 
-ReqHandler::ReqHandler() : pBaseReqDispatcher_()
+ReqHandler::ReqHandler() : pRootReqDispatcher_(new RootReqDispatcher())
 {
 }
 
@@ -54,9 +55,6 @@ ReqHandler::~ReqHandler()
 void ReqHandler::handleRequest(Poco::Net::HTTPServerRequest& request, 
 							   Poco::Net::HTTPServerResponse& response)
 {
-	// FIXME: No va a haber una sola clase de contenido
-	response.setContentType("text/plain");
-
 	// Le mando el pedido procesado y la ostream de la respuesta al dispatcher
-	pBaseReqDispatcher_->dispatch(ProcRequest(request), response.send());
+	pRootReqDispatcher_->dispatch(ProcRequest(request), response);
 }

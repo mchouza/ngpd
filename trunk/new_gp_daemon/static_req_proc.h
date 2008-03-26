@@ -45,8 +45,10 @@ namespace WebInterface
 	/// Procesa los pedidos de archivos estáticos
 	class StaticReqProc : public ReqProcessor
 	{
+	public:
 		/// Toma el ProcReq y devuelve los datos del archivo correspondiente
-		virtual void process(const ProcReq& procReq, std::ostream& os);
+		virtual void process(const ProcRequest& procReq,
+			Poco::Net::HTTPServerResponse& resp);
 	};
 }
 

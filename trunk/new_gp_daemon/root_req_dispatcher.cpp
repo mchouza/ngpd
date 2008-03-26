@@ -30,76 +30,32 @@
 //
 
 //=============================================================================
-// static_req_proc.cpp
+// root_req_dispatcher.cpp
 //-----------------------------------------------------------------------------
 // Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
 //=============================================================================
 
 #include "proc_request.h"
+#include "root_req_dispatcher.h"
 #include "static_req_proc.h"
-#include <algorithm>
-#include <fstream>
 
 using namespace WebInterface;
 
-namespace
+RootReqDispatcher::RootReqDispatcher() :
+pStaticProc_(new StaticReqProc())
 {
-	/// Obtiene la extesnión del archivo representado en la URI
-	std::string getFileExtension(const std::string& uri)
-	{
-		// Obtengo la posición a la derecha de la última barra
-		size_t slashPos = uri.rfind('/');
-		if (slashPos == uri.npos)
-			slashPos = 0;
-		else
-			slashPos++;
-
-		// Busco la posición a la derecha del último punto que esté después de
-		// la última barra
-		size_t dotPos = uri.rfind('.');
-		if (dotPos != uri.npos && dotPos >= slashPos)
-			dotPos++;
-		else
-			dotPos = uri.npos;
-
-		// Devuelvo el pedazo de cadena que corresponde a la extensión
-		if (dotPos != uri.npos)
-			return std::string(uri, dotPos);
-		else
-			return "";
-	}
 }
 
-void StaticReqProc::process(const ProcRequest& procReq, 
-							Poco::Net::HTTPServerResponse& resp)
+void RootReqDispatcher::dispatch(const ProcRequest &procReq, 
+								 Poco::Net::HTTPServerResponse &out)
 {
-	// FIXME: TEMPORAL!!!
-	// FIXME: FIJARSE SI EL TRUCO DEL rdbuf() SIRVE CON BINARIOS!!!
-	
-	using std::ios;
-
-	// Trato de abrir el archivo
-	std::ifstream file(procReq.getURI().c_str(), ios::in|ios::binary);
-
-	// Si fallo, listo
-	if (!file.is_open())
-	{
-		resp.setContentType("text/plain");
-		resp.send() << "404";
-		return;
-	}
-
-	// Obtengo la extensión
-	std::string ext = getFileExtension(procReq.getURI());
-
-	// Me fijo el tipo de archivo por la extensión
-	if (ext == "html" || ext == "htm")
-		resp.setContentType("text/html");
-	else if (ext == "png")
-		resp.setContentType("image/png");
+	// FIXME: NO HARDCODING
+	if (procReq.getURI().find("/static") == 0)
+		pStaticProc_->process(procReq, out);
 	else
-		resp.setContentType("application/octet-stream");
-
-	// Copio el archivo a la salida
-	resp.send() << file.rdbuf();
+	{
+		// FIXME: Manejar errores en forma consistente
+		out.setContentType("text/html");
+		out.send() << "<h1>404</h1>";
+	}
 }

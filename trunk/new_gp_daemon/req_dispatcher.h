@@ -38,7 +38,7 @@
 #ifndef REQ_DISPATCHER_H
 #define REQ_DISPATCHER_H
 
-#include <ostream>
+#include <Poco/Net/HTTPServerResponse.h>
 
 namespace WebInterface
 {
@@ -52,7 +52,7 @@ namespace WebInterface
 	public:
 		/// Envía el pedido hacia donde deba procesarse
 		virtual void dispatch(const ProcRequest& procReq,
-			std::ostream& out) = 0;
+			Poco::Net::HTTPServerResponse& out) = 0;
 	};
 }
 
