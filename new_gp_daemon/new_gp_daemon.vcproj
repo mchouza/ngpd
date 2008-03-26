@@ -247,6 +247,10 @@
 					RelativePath=".\ngpd_app.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\ngpd_config.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Header Files"
@@ -257,6 +261,46 @@
 					RelativePath=".\ngpd_app.h"
 					>
 				</File>
+				<File
+					RelativePath=".\ngpd_config.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="OSDep"
+			>
+			<Filter
+				Name="Source Files"
+				>
+				<File
+					RelativePath=".\os_dep.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Header Files"
+				>
+				<File
+					RelativePath=".\os_dep.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Err"
+			>
+			<Filter
+				Name="Header Files"
+				>
+				<File
+					RelativePath=".\exceptions.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Source Files"
+				>
 			</Filter>
 		</Filter>
 		<File

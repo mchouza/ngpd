@@ -38,6 +38,8 @@
 #include <Poco/Net/HTTPServer.h>
 #include <Poco/Net/HTTPServerParams.h>
 #include "ngpd_app.h"
+#include "ngpd_config.h"
+#include "os_dep.h"
 #include "req_handler_factory.h"
 
 using namespace Core;
@@ -58,6 +60,21 @@ void NGPDApp::uninitialize()
 
 	// Llamo a la implementación de la clase base
 	ServerApplication::uninitialize();
+}
+
+int NGPDApp::loadConfiguration(int priority)
+{
+	// Cargo la configuración base
+	config().add(new NGPDConfig(OSDep::getPath(OSDep::PATH_CFG_BASE)), 
+		priority, false, false);
+
+	// Cargo la configuración "editable" con una prioridad más baja, de modo 
+	// que no pueda sobreescribir los parámetros básicos
+	config().add(new NGPDConfig(OSDep::getPath(OSDep::PATH_CFG_WRITEABLE)),
+		priority + 1, false, false);
+
+	// Devuelvo la cantidad de configuraciones cargadas
+	return 2;
 }
 
 int NGPDApp::main(const std::vector<std::string>& args)

@@ -30,34 +30,43 @@
 //
 
 //=============================================================================
-// ngpd_app.h
+// exceptions.h
 //-----------------------------------------------------------------------------
-// Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
+// Creado por Mariano M. Chouza | Empezado el 26 de marzo de 2008
 //=============================================================================
 
-#ifndef NGPD_APP_H
-#define NGPD_APP_H
+#include <Poco/Exception.h>
 
-#include <Poco/Util/ServerApplication.h>
-
-namespace Core
+namespace Err
 {
-	/// Clase de la aplicación servidor
-	class NGPDApp : public Poco::Util::ServerApplication
+	/// Base de las excepciones de NGPD
+	class BaseException : public Poco::Exception
 	{
-	protected:
-		/// Maneja la inicialización
-		virtual void initialize(Poco::Util::Application& self);
+	public:
+		BaseException(const std::string& msg) : Poco::Exception(msg) {}
+	};
 
-		/// Maneja la liberación de recursos
-		virtual void uninitialize();
+	/// Indica una excepción no recuperable
+	class FatalException : public BaseException
+	{
+	public:
+		FatalException(const std::string& msg) : BaseException(msg) {}
+	};
 
-		/// Carga la configuración (pisa al método de la clase base)
-		int loadConfiguration(int priority = PRIO_DEFAULT);
+	/// Indica una excepción de propósito informativo
+	class InfoException : public BaseException
+	{
+	public:
+		InfoException(const std::string& msg) : BaseException(msg) {}
+	};
 
-		/// Método que realiza el trabajo
-		virtual int main(const std::vector<std::string>& args);
+	/// Indica un error en el formato de un archivo INI
+	class INIFormatException : public FatalException
+	{
+	public:
+		INIFormatException(const std::string& line) :
+		  FatalException("Error de formato. No se entiende: '" + line + "'.")
+		{
+		}
 	};
 }
-
-#endif
