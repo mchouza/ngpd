@@ -69,8 +69,11 @@ namespace
 	}
 
 	/// Asigna una variable al mapa como corresponda
-
-
+	void parseVar(const std::string& section, const std::string& line,
+		std::map<std::string, std::string>& dataMap)
+	{
+		// FIXME: HACER QUE FUNCIONE
+	}
 	
 	/// Carga los datos desde un INI a un map
 	void loadMapFromINI(const std::string& fileName,
