@@ -30,34 +30,60 @@
 //
 
 //=============================================================================
-// ngpd_app.h
+// os_dep.cpp
 //-----------------------------------------------------------------------------
-// Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
+// Creado por Mariano M. Chouza | Empezado el 26 de marzo de 2008
 //=============================================================================
 
-#ifndef NGPD_APP_H
-#define NGPD_APP_H
+#include "exceptions.h"
+#include "os_dep.h"
+#include <cassert>
 
-#include <Poco/Util/ServerApplication.h>
+#ifdef WIN32
 
-namespace Core
+#include <shlobj.h>
+
+std::string OSDep::getPath(EPath pathType)
 {
-	/// Clase de la aplicación servidor
-	class NGPDApp : public Poco::Util::ServerApplication
+	// Obtengo el AppData
+	char szPath[MAX_PATH];
+	if (FAILED(SHGetFolderPath(NULL, CSIDL_COMMON_APPDATA, NULL, 0, szPath)))
+		throw Err::FatalException("No pudieron encontrarse los archivos de configuración.");
+
+	const std::string cfgBaseRelPath = "\\NGPD\\config_base.ini";
+	const std::string cfgWritRelPath = "\\NGPD\\config_base.ini";
+	const std::string appdataRelPath = "\\NGPD\\";
+
+	switch (pathType)
 	{
-	protected:
-		/// Maneja la inicialización
-		virtual void initialize(Poco::Util::Application& self);
+	case PATH_APP_DATA:
+		return szPath + appdataRelPath;
+	case PATH_CFG_BASE:
+		return szPath + cfgBaseRelPath;
+	case PATH_CFG_WRITEABLE:
+		return szPath + cfgWritRelPath;
+	}
 
-		/// Maneja la liberación de recursos
-		virtual void uninitialize();
-
-		/// Carga la configuración (pisa al método de la clase base)
-		int loadConfiguration(int priority = PRIO_DEFAULT);
-
-		/// Método que realiza el trabajo
-		virtual int main(const std::vector<std::string>& args);
-	};
+	assert(!"Falta un tipo de path en EPath");
+	return "INVALID_NEVER_REACHED";
 }
+
+void OSDep::disableErrorDialogs()
+{
+	// FIXME: Poner que modos se quieren desactivar
+/*	SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOALIGNMENTFAULTEXCEPT |
+		SEM_NOGPFAULTERRORBOX | SEM_NOOPENFILEERRORBOX);*/
+	SetErrorMode(SEM_FAILCRITICALERRORS);
+}
+
+void OSDep::enableErrorDialogs()
+{
+	SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOALIGNMENTFAULTEXCEPT |
+		SEM_NOGPFAULTERRORBOX | SEM_NOOPENFILEERRORBOX);
+}
+
+#else
+
+#error OS no soportado
 
 #endif

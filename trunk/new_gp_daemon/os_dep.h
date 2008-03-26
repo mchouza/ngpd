@@ -30,34 +30,32 @@
 //
 
 //=============================================================================
-// ngpd_app.h
+// os_dep.h
 //-----------------------------------------------------------------------------
-// Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
+// Creado por Mariano M. Chouza | Empezado el 26 de marzo de 2008
 //=============================================================================
 
-#ifndef NGPD_APP_H
-#define NGPD_APP_H
+#ifndef OS_DEP_H
+#define OS_DEP_H
 
-#include <Poco/Util/ServerApplication.h>
+#include <string>
 
-namespace Core
+namespace OSDep
 {
-	/// Clase de la aplicación servidor
-	class NGPDApp : public Poco::Util::ServerApplication
+	/// Paths que se pueden pedir
+	enum EPath
 	{
-	protected:
-		/// Maneja la inicialización
-		virtual void initialize(Poco::Util::Application& self);
-
-		/// Maneja la liberación de recursos
-		virtual void uninitialize();
-
-		/// Carga la configuración (pisa al método de la clase base)
-		int loadConfiguration(int priority = PRIO_DEFAULT);
-
-		/// Método que realiza el trabajo
-		virtual int main(const std::vector<std::string>& args);
+		PATH_APP_DATA, PATH_CFG_BASE, PATH_CFG_WRITEABLE
 	};
+	
+	/// Devuelve el path pedido
+	std::string getPath(EPath pathType);
+
+	/// Desactiva los dialogs de error del sistema
+	void disableErrorDialogs();
+
+	/// Activa los dialogs de error del sistema
+	void enableErrorDialogs();
 }
 
 #endif

@@ -30,33 +30,52 @@
 //
 
 //=============================================================================
-// ngpd_app.h
+// ngpd_config.h
 //-----------------------------------------------------------------------------
-// Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
+// Creado por Mariano M. Chouza | Empezado el 26 de marzo de 2008
 //=============================================================================
 
-#ifndef NGPD_APP_H
-#define NGPD_APP_H
+#ifndef NGPD_CONFIG_H
+#define NGPD_CONFIG_H
 
-#include <Poco/Util/ServerApplication.h>
+#include <map>
+#include <Poco/Util/AbstractConfiguration.h>
 
 namespace Core
 {
-	/// Clase de la aplicación servidor
-	class NGPDApp : public Poco::Util::ServerApplication
+	/// Clase de la configuración de la aplicación (implemento una propia 
+	/// porque la del framework no guarda)
+	class NGPDConfig : public Poco::Util::AbstractConfiguration
 	{
+		/// Solo lectura?
+		bool readOnly_;
+		
+		/// Nombre del archivo INI
+		std::string iniFileName_;
+
+		/// Tipo del map asociado
+		typedef std::map<std::string, std::string> TDataMap;
+
+		/// Map asociado
+		TDataMap dataMap_;
+
+	public:
+		/// Construye a partir de un archivo INI
+		NGPDConfig(const std::string& fileName, bool readOnly = true);
+
+		/// Destructor (se encarga de guardar los datos)
+		virtual ~NGPDConfig();
+
 	protected:
-		/// Maneja la inicialización
-		virtual void initialize(Poco::Util::Application& self);
+		/// Obtiene los datos "en bruto"
+		virtual bool getRaw(const std::string& key, std::string& value) const;
 
-		/// Maneja la liberación de recursos
-		virtual void uninitialize();
-
-		/// Carga la configuración (pisa al método de la clase base)
-		int loadConfiguration(int priority = PRIO_DEFAULT);
-
-		/// Método que realiza el trabajo
-		virtual int main(const std::vector<std::string>& args);
+		/// Pone los datos "en bruto"
+		virtual void setRaw(const std::string & key,
+			const std::string & value);
+	
+		/// Devuelve en 'range' las claves que encuentre con prefijo 'key'
+		virtual void enumerate(const std::string& key, Keys& range) const;
 	};
 }
 
