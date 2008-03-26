@@ -51,7 +51,7 @@ namespace WebInterface
 	class ReqHandler : public Poco::Net::HTTPRequestHandler
 	{
 		/// Dispatcher base
-		boost::shared_ptr<ReqDispatcher> pBaseReqDispatcher_;
+		boost::shared_ptr<ReqDispatcher> pRootReqDispatcher_;
 
 	public:
 		/// Constructor

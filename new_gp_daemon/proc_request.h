@@ -56,6 +56,18 @@ namespace WebInterface
 	public:
 		/// Lo construye a partir de un pedido HTTP
 		ProcRequest(const Poco::Net::HTTPServerRequest& request);
+
+		/// Obtiene la URI
+		const std::string& getURI() const
+		{
+			return uri_;
+		}
+
+		/// Obtiene el map de parámetros
+		const std::map<std::string, std::string>& getParams() const
+		{
+			return params_;
+		}
 	};
 }
 

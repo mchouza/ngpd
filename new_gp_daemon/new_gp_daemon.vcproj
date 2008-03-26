@@ -118,7 +118,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="P:\poco\Util\include;P:\poco\Foundation\include;P:\poco\Net\include"
+				AdditionalIncludeDirectories="P:\poco\Util\include;P:\poco\Foundation\include;P:\poco\Net\include;p:\boost"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -202,6 +202,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\root_req_dispatcher.h"
+					>
+				</File>
+				<File
 					RelativePath=".\static_req_proc.h"
 					>
 				</File>
@@ -219,6 +223,10 @@
 				</File>
 				<File
 					RelativePath=".\req_handler_factory.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\root_req_dispatcher.cpp"
 					>
 				</File>
 				<File
