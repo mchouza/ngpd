@@ -72,7 +72,26 @@ namespace
 	void parseVar(const std::string& section, const std::string& line,
 		std::map<std::string, std::string>& dataMap)
 	{
-		// FIXME: HACER QUE FUNCIONE
+		// Busco el primer '='
+		size_t eqPos = line.find('=');
+		if (eqPos == line.npos)
+			throw Err::INIFormatException(line);
+
+		// Tomo lo que estpe a la izquierda como clave
+		std::string key = line.substr(0, eqPos);
+		trimLeading(key);
+		trimTrailing(key);
+
+		// Tomo todo lo que esté a la derecha como valor
+		std::string value = line.substr(eqPos + 1, line.npos);
+		trimLeading(value);
+		trimTrailing(value);
+
+		// Uno la clave a la sección
+		key = section + key;
+
+		// Guardo así
+		dataMap[key] = value;
 	}
 	
 	/// Carga los datos desde un INI a un map

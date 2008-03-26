@@ -2,11 +2,11 @@ OBJETIVOS (con tiempos)
 =======================
 - Tener funcionando un daemon con server y templates HTML. [Martes 25/3]
 - Cargar módulos en base al XML. [Miércoles 26/3]
-- Conectar configuración con la inetrafz web. Agregar transaccionalidad al manejo de archivos. [Jueves 27/3]
+- Conectar configuración con la interfaz web. Agregar transaccionalidad al manejo de archivos. [Jueves 27/3]
 
 GENERALIDADES
 =============
-- Es un daemon (gpgd).
+- Es un daemon (ngpd).
 - Se puede consultar su estado por "loopback", lo que implica que tiene info estadística en memoria.
 - Toma un "trabajo" desde APPDATA y lo ejecuta.
 - Admite límites en la RAM empleada para la población, ver como implementar.
@@ -16,6 +16,7 @@ GENERALIDADES
 - Guardo info estadística junto al trabajo.
 - El trabajo le indica qué módulos usar para cada cosa.
 - El trabajo lleva asociado un archivo ".bin" donde guarda la población.
+- Tomo la mayoría del manejo de módulos de 'gpgd'.
 
 CONFIG
 ======
@@ -28,3 +29,4 @@ CONFIG
   a) Una vez procesado, enviarlo junto con la ostream a otro ReqDispatcher.
   b) Usar un map para despacharlo junto con la ostream a un FinalReqHandler.
 - El ReqProcessor toma el request procesado y una ostream y saca por la ostream el texto de la salida.
+- Usar un parser para los INI, así se evitan sorpresas.
