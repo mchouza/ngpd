@@ -30,39 +30,61 @@
 //
 
 //=============================================================================
-// req_handler.h
+// ini_file.h
 //-----------------------------------------------------------------------------
-// Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
+// Creado por Mariano M. Chouza | Empezado el 27 de marzo de 2008
 //=============================================================================
 
-#ifndef REQ_HANDLER_H
-#define REQ_HANDLER_H
+#ifndef LIB_INI_H
+#define LIB_INI_H
 
 #include <boost/scoped_ptr.hpp>
-#include <Poco/Net/HTTPRequestHandler.h>
+#include <map>
+#include <string>
+#include <vector>
 
-namespace WebInterface
+namespace Lib
 {
-	// Forward
-	class ReqDispatcher;
-	
-	/// Se ocupa de atender los pedidos HTTP y mandarlos hacia donde 
-	/// corresponda
-	class ReqHandler : public Poco::Net::HTTPRequestHandler
+	/// Clase encargada de manejar un INI
+	class INIFile
 	{
-		/// Dispatcher base
-		boost::scoped_ptr<ReqDispatcher> pRootReqDispatcher_;
+		/// Nombre del archivo
+		std::string fileName_;
+		
+		/// Tipo de cada sección
+		typedef std::map<std::string, std::string> TSection;
+
+		/// Tipo de los datos
+		typedef std::map<std::string, TSection> TData;
+		
+		/// Datos
+		TData data_;
 
 	public:
-		/// Constructor
-		ReqHandler();
+		/// Construye en base a los datos de un archivo
+		INIFile(const std::string& fileName);
 
-		/// Destructor
-		virtual ~ReqHandler();
+		/// Destructor. Guarda los cambios en el archivo desde donde cargó los
+		/// datos
+		virtual ~INIFile();
 
-		/// Toma el request y lo envía para ser procesado
-		virtual void handleRequest(Poco::Net::HTTPServerRequest& request,
-			Poco::Net::HTTPServerResponse& response);
+		/// Fuerza a guardar los cambios en el archivo
+		void flush();
+
+		/// Escribe un valor dada la sección y la clave 
+		void writeValue(const std::string& section, const std::string& key, 
+			const std::string& value);
+
+		/// Lee un valor dada la sección y la clave
+		std::string readValue(const std::string& section, 
+			const std::string& key) const;
+
+		/// Enumera las secciones del archivo
+		std::vector<std::string> enumerateSections() const;
+
+		/// Devuelve los pares clave-valor de una sección
+		std::map<std::string, std::string> 
+			enumeratePairs(const std::string& section) const;
 	};
 }
 

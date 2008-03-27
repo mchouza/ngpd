@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="P:\poco\Util\include;P:\poco\Foundation\include;P:\poco\Net\include;p:\boost\"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -301,6 +301,22 @@
 			<Filter
 				Name="Source Files"
 				>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Lib"
+			>
+			<Filter
+				Name="INI"
+				>
+				<File
+					RelativePath=".\ini_file.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ini_file.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<File
