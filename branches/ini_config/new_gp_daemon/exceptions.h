@@ -69,4 +69,14 @@ namespace Err
 		{
 		}
 	};
+
+	/// Indica un error al intentar abrir un archivo
+	class CantOpenFileException : public FatalException
+	{
+	public:
+		CantOpenFileException(const std::string& filename) :
+		  FatalException("No se puede abrir el archivo '" + filename + "'.")
+		{
+		}
+	};
 }

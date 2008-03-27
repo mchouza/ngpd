@@ -39,7 +39,7 @@
 #define ROOT_REQ_DISPATCHER_H
 
 #include "req_dispatcher.h"
-#include <boost/shared_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
 
 namespace WebInterface
 {
@@ -50,7 +50,7 @@ namespace WebInterface
 	class RootReqDispatcher : public ReqDispatcher
 	{
 		/// Procesador de pedidos de contenido estático
-		boost::shared_ptr<ReqProcessor> pStaticProc_;
+		boost::scoped_ptr<ReqProcessor> pStaticProc_;
 
 	public:
 		/// Constructor
