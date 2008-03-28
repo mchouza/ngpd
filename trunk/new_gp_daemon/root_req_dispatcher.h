@@ -39,18 +39,21 @@
 #define ROOT_REQ_DISPATCHER_H
 
 #include "req_dispatcher.h"
-#include <boost/shared_ptr.hpp>
+#include "req_processor.h"
+#include <boost/scoped_ptr.hpp>
 
 namespace WebInterface
 {
-	// Forward
-	class ReqProcessor;
-
 	/// Se encarga de tomar las decisiones en base a las URI originales
 	class RootReqDispatcher : public ReqDispatcher
 	{
+		// FIXME: Organizar en forma más dinámica
+		
 		/// Procesador de pedidos de contenido estático
-		boost::shared_ptr<ReqProcessor> pStaticProc_;
+		boost::scoped_ptr<ReqProcessor> pStaticProc_;
+
+		/// Procesador de pedidos de datos de configuración
+		boost::scoped_ptr<ReqProcessor> pCfgDataProc_;
 
 	public:
 		/// Constructor

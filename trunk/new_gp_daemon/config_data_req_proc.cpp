@@ -30,47 +30,42 @@
 //
 
 //=============================================================================
-// ngpd_app.h
+// config_data_req_proc.cpp
 //-----------------------------------------------------------------------------
-// Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
+// Creado por Mariano M. Chouza | Empezado el 27 de marzo de 2008
 //=============================================================================
 
-#ifndef NGPD_APP_H
-#define NGPD_APP_H
+#include "config_data_req_proc.h"
+#include <Poco/Util/Application.h>
 
-#include "web_server.h"
-#include <boost/scoped_ptr.hpp>
-#include <Poco/Util/ServerApplication.h>
+using namespace WebInterface;
 
-namespace Core
+namespace
 {
-	/// Clase de la aplicación servidor
-	class NGPDApp : public Poco::Util::ServerApplication
+	void recPrint(std::ostream& r, Poco::Util::AbstractConfiguration& c)
 	{
-		// FIXME: Mandar a una clase aparte
-		/// Nivel de log
-		int logLevel_;
-
-		/// Servidor web para la interfaz
-		boost::scoped_ptr<WebInterface::WebServer> pWebServer_;
-
-	protected:
-		/// Maneja la inicialización
-		virtual void initialize(Poco::Util::Application& self);
-
-		/// Maneja la liberación de recursos
-		virtual void uninitialize();
-
-		/// Carga la configuración (pisa al método de la clase base)
-		int loadConfiguration(int priority = PRIO_DEFAULT);
-
-		/// Método que realiza el trabajo
-		virtual int main(const std::vector<std::string>& args);
-
-		/// Realiza el log de una cierta información con un cierto nivel 
-		/// jerárquico que se mantienen hasta reseteado
-		void log(const std::string& msg, int logLevel = -1);
-	};
+		r << "<ul>";
+		Poco::Util::AbstractConfiguration::Keys keys;
+		c.keys("", keys);
+		for (size_t i = 0; i < keys.size(); i++)
+		{
+			r << "<li>" << keys[i];
+			Poco::Util::AbstractConfiguration& cc =
+				*c.createView(keys[i]);
+			recPrint(r, cc);
+			r << "</li>";
+		}
+		r << "</ul>";
+	}
 }
 
-#endif
+void ConfigDataReqProc::process(const ProcRequest& procReq, 
+								Poco::Net::HTTPServerResponse& resp)
+{
+	resp.setContentType("text/html");
+	std::ostream& r = resp.send();
+	Poco::Util::AbstractConfiguration& c =
+		Poco::Util::Application::instance().config();
+	r << "<h1>Variables</h1>";
+	recPrint(r, c);
+}
