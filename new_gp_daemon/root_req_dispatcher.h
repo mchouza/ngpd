@@ -39,7 +39,7 @@
 #define ROOT_REQ_DISPATCHER_H
 
 #include "req_dispatcher.h"
-#include "req_processor.h"
+#include "web_interface_fwd.h"
 #include <boost/scoped_ptr.hpp>
 
 namespace WebInterface

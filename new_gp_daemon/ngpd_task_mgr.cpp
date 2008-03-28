@@ -39,6 +39,6 @@
 
 using namespace Core;
 
-NGPDTaskMgr::NGPDTaskMgr()
+NGPDTaskMgr::NGPDTaskMgr(const Poco::Util::AbstractConfiguration& config)
 {
 }

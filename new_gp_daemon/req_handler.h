@@ -38,7 +38,7 @@
 #ifndef REQ_HANDLER_H
 #define REQ_HANDLER_H
 
-#include <boost/shared_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <Poco/Net/HTTPRequestHandler.h>
 
 namespace WebInterface
@@ -51,7 +51,7 @@ namespace WebInterface
 	class ReqHandler : public Poco::Net::HTTPRequestHandler
 	{
 		/// Dispatcher base
-		boost::shared_ptr<ReqDispatcher> pRootReqDispatcher_;
+		boost::scoped_ptr<ReqDispatcher> pRootReqDispatcher_;
 
 	public:
 		/// Constructor

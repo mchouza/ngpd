@@ -38,17 +38,21 @@
 #ifndef REQ_PROCESSOR_H
 #define REQ_PROCESSOR_H
 
+#include "web_interface_fwd.h"
 #include <Poco/Net/HTTPServerResponse.h>
 
 namespace WebInterface
 {
-	// Forward
-	class ProcRequest;
-	
 	/// Base abstracta para las clases encargadas de procesar los pedidos HTTP
 	class ReqProcessor
 	{
 	public:
+		/// Constructor
+		ReqProcessor() {}
+
+		/// Destructor
+		virtual ~ReqProcessor() {}
+		
 		/// Toma el ProcReq y devuelve los datos que correspondan por la stream
 		virtual void process(const ProcRequest& procReq,
 			Poco::Net::HTTPServerResponse& resp) = 0;

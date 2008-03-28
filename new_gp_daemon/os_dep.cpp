@@ -35,8 +35,8 @@
 // Creado por Mariano M. Chouza | Empezado el 26 de marzo de 2008
 //=============================================================================
 
-#include "exceptions.h"
 #include "os_dep.h"
+#include "exceptions.h"
 #include <cassert>
 
 #ifdef WIN32
@@ -45,14 +45,18 @@
 
 std::string OSDep::getPath(EPath pathType)
 {
+	using Err::FatalException;
+	using std::string;
+	
 	// Obtengo el AppData
 	char szPath[MAX_PATH];
 	if (FAILED(SHGetFolderPath(NULL, CSIDL_COMMON_APPDATA, NULL, 0, szPath)))
-		throw Err::FatalException("No pudieron encontrarse los archivos de configuración.");
+		throw FatalException(	"No pudieron encontrarse los archivos de "
+								"configuración.");
 
-	const std::string cfgBaseRelPath = "\\NGPD\\base_config.properties";
-	const std::string cfgWritRelPath = "\\NGPD\\xtra_config.properties";
-	const std::string appdataRelPath = "\\NGPD\\";
+	const string cfgBaseRelPath = "\\NGPD\\base_config.properties";
+	const string cfgWritRelPath = "\\NGPD\\xtra_config.properties";
+	const string appdataRelPath = "\\NGPD\\";
 
 	switch (pathType)
 	{
