@@ -30,46 +30,33 @@
 //
 
 //=============================================================================
-// ngpd_app.h
+// web_server.h
 //-----------------------------------------------------------------------------
-// Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
+// Creado por Mariano M. Chouza | Empezado el 27 de marzo de 2008
 //=============================================================================
 
-#ifndef NGPD_APP_H
-#define NGPD_APP_H
+#ifndef WEB_SERVER_H
+#define WEB_SERVER_H
 
-#include "web_server.h"
-#include <boost/scoped_ptr.hpp>
-#include <Poco/Util/ServerApplication.h>
+#include <Poco/Net/HTTPServer.h>
 
-namespace Core
+namespace WebInterface
 {
-	/// Clase de la aplicación servidor
-	class NGPDApp : public Poco::Util::ServerApplication
+	/// Servidor web que presenta una interfaz para el daemon
+	class WebServer
 	{
-		// FIXME: Mandar a una clase aparte
-		/// Nivel de log
-		int logLevel_;
+		/// Socket con el que escucha el servidor
+		Poco::Net::ServerSocket srvSocket_;
+	
+		/// Servidor HTTP
+		Poco::Net::HTTPServer server_;
 
-		/// Servidor web para la interfaz
-		boost::scoped_ptr<WebInterface::WebServer> pWebServer_;
+	public:
+		/// Constructor
+		WebServer();
 
-	protected:
-		/// Maneja la inicialización
-		virtual void initialize(Poco::Util::Application& self);
-
-		/// Maneja la liberación de recursos
-		virtual void uninitialize();
-
-		/// Carga la configuración (pisa al método de la clase base)
-		int loadConfiguration(int priority = PRIO_DEFAULT);
-
-		/// Método que realiza el trabajo
-		virtual int main(const std::vector<std::string>& args);
-
-		/// Realiza el log de una cierta información con un cierto nivel 
-		/// jerárquico que se mantienen hasta reseteado
-		void log(const std::string& msg, int logLevel = -1);
+		/// Destructor
+		virtual ~WebServer();
 	};
 }
 

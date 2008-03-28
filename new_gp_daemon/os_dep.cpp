@@ -50,8 +50,8 @@ std::string OSDep::getPath(EPath pathType)
 	if (FAILED(SHGetFolderPath(NULL, CSIDL_COMMON_APPDATA, NULL, 0, szPath)))
 		throw Err::FatalException("No pudieron encontrarse los archivos de configuración.");
 
-	const std::string cfgBaseRelPath = "\\NGPD\\config_base.ini";
-	const std::string cfgWritRelPath = "\\NGPD\\config_base.ini";
+	const std::string cfgBaseRelPath = "\\NGPD\\base_config.properties";
+	const std::string cfgWritRelPath = "\\NGPD\\xtra_config.properties";
 	const std::string appdataRelPath = "\\NGPD\\";
 
 	switch (pathType)

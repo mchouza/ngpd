@@ -35,6 +35,7 @@
 // Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
 //=============================================================================
 
+#include "config_data_req_proc.h"
 #include "proc_request.h"
 #include "root_req_dispatcher.h"
 #include "static_req_proc.h"
@@ -42,7 +43,8 @@
 using namespace WebInterface;
 
 RootReqDispatcher::RootReqDispatcher() :
-pStaticProc_(new StaticReqProc())
+pStaticProc_(new StaticReqProc()),
+pCfgDataProc_(new ConfigDataReqProc())
 {
 }
 
@@ -52,6 +54,8 @@ void RootReqDispatcher::dispatch(const ProcRequest &procReq,
 	// FIXME: NO HARDCODING
 	if (procReq.getURI().find("/static") == 0)
 		pStaticProc_->process(procReq, out);
+	else if (procReq.getURI().find("/config-data") == 0)
+		pCfgDataProc_->process(procReq, out);
 	else
 	{
 		// FIXME: Manejar errores en forma consistente

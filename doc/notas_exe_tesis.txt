@@ -1,8 +1,12 @@
 OBJETIVOS (con tiempos)
 =======================
-- Tener funcionando un daemon con server y templates HTML. [Martes 25/3]
-- Cargar módulos en base al XML. [Miércoles 26/3]
-- Conectar configuración con la interfaz web. Agregar transaccionalidad al manejo de archivos. [Jueves 27/3]
+- DETERMINAR.
+
+OBJETIVOS CUMPLIDOS
+===================
+- Tener funcionando un daemon con server y templates HTML. [Martes 25/3] (Faltan las templates).
+- Cargar módulos en base al XML. [Miércoles 26/3] (No realmente, abandoné el XML y voy a cargar en base al .properties)
+- Conectar configuración con la interfaz web. Agregar transaccionalidad al manejo de archivos. [Jueves 27/3] (Terminado parcialmente, no hay escritura ni transaccionalidad. Funcionalidad básica de despliegue demostrada.)
 
 GENERALIDADES
 =============
@@ -29,4 +33,7 @@ CONFIG
   a) Una vez procesado, enviarlo junto con la ostream a otro ReqDispatcher.
   b) Usar un map para despacharlo junto con la ostream a un FinalReqHandler.
 - El ReqProcessor toma el request procesado y una ostream y saca por la ostream el texto de la salida.
-- Usar un parser para los INI, así se evitan sorpresas.
+- Los datos se representan con URLs tales como 'http://localhost:<puerto>/config_data/foo/bar' para lo que se almacena en el .properties como 'foo.bar'.
+- Se guarda con POST y se obtiene con GET.
+- Para mayor eficiencia en la visualización, 'http://localhost:<puerto>/config_data/foo/' muestra todos los valores que están bajo foo ('foo.*' en el .properties).
+- Uso JavaScript para hacer POSTs donde haga falta cambiar los valores.

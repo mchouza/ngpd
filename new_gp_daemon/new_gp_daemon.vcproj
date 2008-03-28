@@ -182,6 +182,10 @@
 				Name="Header Files"
 				>
 				<File
+					RelativePath=".\config_data_req_proc.h"
+					>
+				</File>
+				<File
 					RelativePath=".\proc_request.h"
 					>
 				</File>
@@ -209,10 +213,18 @@
 					RelativePath=".\static_req_proc.h"
 					>
 				</File>
+				<File
+					RelativePath=".\web_server.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Source Files"
 				>
+				<File
+					RelativePath=".\config_data_req_proc.cpp"
+					>
+				</File>
 				<File
 					RelativePath=".\proc_request.cpp"
 					>
@@ -233,6 +245,10 @@
 					RelativePath=".\static_req_proc.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\web_server.cpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -248,7 +264,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\ngpd_config.cpp"
+					RelativePath=".\ngpd_task_mgr.cpp"
 					>
 				</File>
 			</Filter>
@@ -262,7 +278,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\ngpd_config.h"
+					RelativePath=".\ngpd_task_mgr.h"
 					>
 				</File>
 			</Filter>

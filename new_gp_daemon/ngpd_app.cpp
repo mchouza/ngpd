@@ -35,12 +35,10 @@
 // Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
 //=============================================================================
 
-#include <Poco/Net/HTTPServer.h>
-#include <Poco/Net/HTTPServerParams.h>
 #include "ngpd_app.h"
-#include "ngpd_config.h"
 #include "os_dep.h"
-#include "req_handler_factory.h"
+#include "web_server.h"
+#include <Poco/Util/PropertyFileConfiguration.h>
 
 using namespace Core;
 
@@ -49,8 +47,19 @@ void NGPDApp::initialize(Poco::Util::Application& self)
 	// Llamo a la implementación de la clase base
 	ServerApplication::initialize(self);
 
+	// FIXME: Esto tiene que ir en otro lado
+	logLevel_ = 0;
+
 	// Indico que estoy inicializando
-	logger().information("Iniciando NGPD (New Genetic Programming Daemon)...");
+	log("Iniciando NGPD (New Genetic Programming Daemon)...");
+
+	// Cargo la configuración
+	log("Cargando la configuración...", 1);
+	loadConfiguration();
+
+	// Inicio el servidor web
+	log("Iniciando servidor web...");
+	pWebServer_.reset(new WebInterface::WebServer());
 }
 
 void NGPDApp::uninitialize()
@@ -64,13 +73,18 @@ void NGPDApp::uninitialize()
 
 int NGPDApp::loadConfiguration(int priority)
 {
+	using Poco::Util::PropertyFileConfiguration;
+	
 	// Cargo la configuración base
-	config().add(new NGPDConfig(OSDep::getPath(OSDep::PATH_CFG_BASE)), 
+	config().add(
+		new PropertyFileConfiguration(OSDep::getPath(OSDep::PATH_CFG_BASE)),
 		priority, false, false);
 
 	// Cargo la configuración "editable" con una prioridad más baja, de modo 
 	// que no pueda sobreescribir los parámetros básicos
-	config().add(new NGPDConfig(OSDep::getPath(OSDep::PATH_CFG_WRITEABLE)),
+	config().add(
+		new PropertyFileConfiguration(
+			OSDep::getPath(OSDep::PATH_CFG_WRITEABLE)),
 		priority + 1, false, false);
 
 	// Devuelvo la cantidad de configuraciones cargadas
@@ -79,26 +93,22 @@ int NGPDApp::loadConfiguration(int priority)
 
 int NGPDApp::main(const std::vector<std::string>& args)
 {
-	using Poco::Net::HTTPServer;
-	using Poco::Net::ServerSocket;
-
-	// Creo el socket de escucha
-	// FIXME: Hacer configurable
-	ServerSocket srvSocket(1234);
-	
-	// Creo el servidor
-	HTTPServer server(new WebInterface::ReqHandlerFactory(), srvSocket, 
-		new Poco::Net::HTTPServerParams());
-	
-	// Lo arranco
-	server.start();
-
 	// Espero
 	waitForTerminationRequest();
 
-	// Detengo el server
-	server.stop();
-
 	// Terminé OK
 	return NGPDApp::EXIT_OK;
+}
+
+void NGPDApp::log(const std::string& msg, int logLevel)
+{
+	// Actualizo el log level
+	if (logLevel >= 0)
+		logLevel_ = logLevel;
+
+	// Armo el tab string
+	std::string tabString(logLevel_ * 2, ' ');
+
+	// Imprimo el mensaje
+	logger().information(tabString + msg);
 }

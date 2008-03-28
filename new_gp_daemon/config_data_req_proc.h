@@ -30,46 +30,26 @@
 //
 
 //=============================================================================
-// ngpd_app.h
+// config_data_req_proc.h
 //-----------------------------------------------------------------------------
-// Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
+// Creado por Mariano M. Chouza | Empezado el 27 de marzo de 2008
 //=============================================================================
 
-#ifndef NGPD_APP_H
-#define NGPD_APP_H
+#ifndef CONFIG_DATA_REQ_PROC_H
+#define CONFIG_DATA_REQ_PROC_H
 
-#include "web_server.h"
-#include <boost/scoped_ptr.hpp>
-#include <Poco/Util/ServerApplication.h>
+#include "req_processor.h"
 
-namespace Core
+namespace WebInterface
 {
-	/// Clase de la aplicación servidor
-	class NGPDApp : public Poco::Util::ServerApplication
+	/// Maneja el acceso a los datos de configuración
+	class ConfigDataReqProc : public ReqProcessor
 	{
-		// FIXME: Mandar a una clase aparte
-		/// Nivel de log
-		int logLevel_;
-
-		/// Servidor web para la interfaz
-		boost::scoped_ptr<WebInterface::WebServer> pWebServer_;
-
-	protected:
-		/// Maneja la inicialización
-		virtual void initialize(Poco::Util::Application& self);
-
-		/// Maneja la liberación de recursos
-		virtual void uninitialize();
-
-		/// Carga la configuración (pisa al método de la clase base)
-		int loadConfiguration(int priority = PRIO_DEFAULT);
-
-		/// Método que realiza el trabajo
-		virtual int main(const std::vector<std::string>& args);
-
-		/// Realiza el log de una cierta información con un cierto nivel 
-		/// jerárquico que se mantienen hasta reseteado
-		void log(const std::string& msg, int logLevel = -1);
+	public:
+		/// Toma el ProcReq y actúa sobre el dato de configuración 
+		/// correspondiente
+		virtual void process(const ProcRequest& procReq,
+			Poco::Net::HTTPServerResponse& resp);
 	};
 }
 
