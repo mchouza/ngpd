@@ -30,58 +30,18 @@
 //
 
 //=============================================================================
-// ngpd_app.h
+// core_fwd.h
 //-----------------------------------------------------------------------------
-// Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
+// Creado por Mariano M. Chouza | Empezado el 28 de marzo de 2008
 //=============================================================================
 
-#ifndef NGPD_APP_H
-#define NGPD_APP_H
-
-#include "core_fwd.h"
-#include "web_interface_fwd.h"
-#include <boost/scoped_ptr.hpp>
-#include <Poco/Util/ServerApplication.h>
+#ifndef CORE_FWD_H
+#define CORE_FWD_H
 
 namespace Core
 {
-	/// Clase de la aplicación servidor
-	class NGPDApp : public Poco::Util::ServerApplication
-	{
-		// FIXME: Mandar a una clase aparte
-		/// Nivel de log
-		int logLevel_;
-
-		/// Servidor web para la interfaz
-		boost::scoped_ptr<WebInterface::WebServer> pWebServer_;
-
-		/// Módulos para realizar operaciones varias
-		boost::scoped_ptr<Core::NGPDModules> pMods_;
-	
-	public:
-		/// Constructor
-		NGPDApp();
-
-		/// Destructor
-		virtual ~NGPDApp();
-
-	protected:
-		/// Maneja la inicialización
-		virtual void initialize(Poco::Util::Application& self);
-
-		/// Maneja la liberación de recursos
-		virtual void uninitialize();
-
-		/// Carga la configuración (pisa al método de la clase base)
-		int loadConfiguration(int priority = PRIO_DEFAULT);
-
-		/// Método que realiza el trabajo
-		virtual int main(const std::vector<std::string>& args);
-
-		/// Realiza el log de una cierta información con un cierto nivel 
-		/// jerárquico (el valor por defecto mantiene el nivel previo)
-		void log(const std::string& msg, int logLevel = -1);
-	};
+	// Forwards
+	class NGPDModules;
 }
 
 #endif

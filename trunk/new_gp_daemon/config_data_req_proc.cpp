@@ -44,14 +44,15 @@ namespace
 {
 	void recPrint(std::ostream& r, Poco::Util::AbstractConfiguration& c)
 	{
+		using Poco::Util::AbstractConfiguration;
+		
 		r << "<ul>";
-		Poco::Util::AbstractConfiguration::Keys keys;
+		AbstractConfiguration::Keys keys;
 		c.keys("", keys);
 		for (size_t i = 0; i < keys.size(); i++)
 		{
 			r << "<li>" << keys[i];
-			Poco::Util::AbstractConfiguration& cc =
-				*c.createView(keys[i]);
+			AbstractConfiguration& cc = *c.createView(keys[i]);
 			recPrint(r, cc);
 			r << "</li>";
 		}
@@ -62,10 +63,14 @@ namespace
 void ConfigDataReqProc::process(const ProcRequest& procReq, 
 								Poco::Net::HTTPServerResponse& resp)
 {
+	using Poco::Util::AbstractConfiguration;
+	using Poco::Util::Application;
+	using std::ostream;
+	
 	resp.setContentType("text/html");
-	std::ostream& r = resp.send();
-	Poco::Util::AbstractConfiguration& c =
-		Poco::Util::Application::instance().config();
+	ostream& r = resp.send();
+	AbstractConfiguration& c =
+		Application::instance().config();
 	r << "<h1>Variables</h1>";
 	recPrint(r, c);
 }

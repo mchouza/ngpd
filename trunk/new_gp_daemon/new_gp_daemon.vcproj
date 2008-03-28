@@ -214,6 +214,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\web_interface_fwd.h"
+					>
+				</File>
+				<File
 					RelativePath=".\web_server.h"
 					>
 				</File>
@@ -264,6 +268,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ngpd_modules.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\ngpd_task_mgr.cpp"
 					>
 				</File>
@@ -274,7 +282,15 @@
 				UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 				>
 				<File
+					RelativePath=".\core_fwd.h"
+					>
+				</File>
+				<File
 					RelativePath=".\ngpd_app.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ngpd_modules.h"
 					>
 				</File>
 				<File

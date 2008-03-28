@@ -39,6 +39,7 @@
 #define NGPD_TASK_MGR_H
 
 #include <Poco/TaskManager.h>
+#include <Poco/Util/AbstractConfiguration.h>
 
 namespace Core
 {
@@ -47,7 +48,7 @@ namespace Core
 	{
 	public:
 		/// Constructor
-		NGPDTaskMgr();
+		NGPDTaskMgr(const Poco::Util::AbstractConfiguration& config);
 	};
 }
 

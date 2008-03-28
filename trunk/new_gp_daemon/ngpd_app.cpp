@@ -36,11 +36,20 @@
 //=============================================================================
 
 #include "ngpd_app.h"
+#include "ngpd_modules.h"
 #include "os_dep.h"
 #include "web_server.h"
 #include <Poco/Util/PropertyFileConfiguration.h>
 
 using namespace Core;
+
+NGPDApp::NGPDApp()
+{
+}
+
+NGPDApp::~NGPDApp()
+{
+}
 
 void NGPDApp::initialize(Poco::Util::Application& self)
 {
@@ -73,18 +82,20 @@ void NGPDApp::uninitialize()
 
 int NGPDApp::loadConfiguration(int priority)
 {
+	using OSDep::getPath;
+	using OSDep::PATH_CFG_BASE;
+	using OSDep::PATH_CFG_WRITEABLE;
 	using Poco::Util::PropertyFileConfiguration;
 	
 	// Cargo la configuración base
 	config().add(
-		new PropertyFileConfiguration(OSDep::getPath(OSDep::PATH_CFG_BASE)),
+		new PropertyFileConfiguration(getPath(PATH_CFG_BASE)),
 		priority, false, false);
 
 	// Cargo la configuración "editable" con una prioridad más baja, de modo 
 	// que no pueda sobreescribir los parámetros básicos
 	config().add(
-		new PropertyFileConfiguration(
-			OSDep::getPath(OSDep::PATH_CFG_WRITEABLE)),
+		new PropertyFileConfiguration(getPath(PATH_CFG_WRITEABLE)),
 		priority + 1, false, false);
 
 	// Devuelvo la cantidad de configuraciones cargadas
@@ -97,17 +108,19 @@ int NGPDApp::main(const std::vector<std::string>& args)
 	waitForTerminationRequest();
 
 	// Terminé OK
-	return NGPDApp::EXIT_OK;
+	return EXIT_OK;
 }
 
 void NGPDApp::log(const std::string& msg, int logLevel)
 {
+	using std::string;
+	
 	// Actualizo el log level
 	if (logLevel >= 0)
 		logLevel_ = logLevel;
 
 	// Armo el tab string
-	std::string tabString(logLevel_ * 2, ' ');
+	string tabString(logLevel_ * 2, ' ');
 
 	// Imprimo el mensaje
 	logger().information(tabString + msg);

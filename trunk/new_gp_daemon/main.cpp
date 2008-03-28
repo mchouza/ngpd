@@ -37,6 +37,4 @@
 
 #include "ngpd_app.h"
 
-using Core::NGPDApp;
-
-POCO_SERVER_MAIN(NGPDApp)
+POCO_SERVER_MAIN(Core::NGPDApp)

@@ -35,8 +35,8 @@
 // Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
 //=============================================================================
 
-#include "proc_request.h"
 #include "static_req_proc.h"
+#include "proc_request.h"
 #include <algorithm>
 #include <fstream>
 
@@ -47,6 +47,8 @@ namespace
 	/// Obtiene la extesnión del archivo representado en la URI
 	std::string getFileExtension(const std::string& uri)
 	{
+		using std::string;
+		
 		// Obtengo la posición a la derecha de la última barra
 		size_t slashPos = uri.rfind('/');
 		if (slashPos == uri.npos)
@@ -64,7 +66,7 @@ namespace
 
 		// Devuelvo el pedazo de cadena que corresponde a la extensión
 		if (dotPos != uri.npos)
-			return std::string(uri, dotPos);
+			return string(uri, dotPos);
 		else
 			return "";
 	}
@@ -76,10 +78,12 @@ void StaticReqProc::process(const ProcRequest& procReq,
 	// FIXME: TEMPORAL!!!
 	// FIXME: FIJARSE SI EL TRUCO DEL rdbuf() SIRVE CON BINARIOS!!!
 	
+	using std::ifstream;
 	using std::ios;
+	using std::string;
 
 	// Trato de abrir el archivo
-	std::ifstream file(procReq.getURI().c_str(), ios::in|ios::binary);
+	ifstream file(procReq.getURI().c_str(), ios::in|ios::binary);
 
 	// Si fallo, listo
 	if (!file.is_open())
@@ -90,7 +94,7 @@ void StaticReqProc::process(const ProcRequest& procReq,
 	}
 
 	// Obtengo la extensión
-	std::string ext = getFileExtension(procReq.getURI());
+	string ext = getFileExtension(procReq.getURI());
 
 	// Me fijo el tipo de archivo por la extensión
 	if (ext == "html" || ext == "htm")
