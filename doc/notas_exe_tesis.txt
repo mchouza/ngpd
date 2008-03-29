@@ -33,7 +33,9 @@ CONFIG
   a) Una vez procesado, enviarlo junto con la ostream a otro ReqDispatcher.
   b) Usar un map para despacharlo junto con la ostream a un FinalReqHandler.
 - El ReqProcessor toma el request procesado y una ostream y saca por la ostream el texto de la salida.
-- Los datos se representan con URLs tales como 'http://localhost:<puerto>/config_data/foo/bar' para lo que se almacena en el .properties como 'foo.bar'.
-- Se guarda con POST y se obtiene con GET.
-- Para mayor eficiencia en la visualización, 'http://localhost:<puerto>/config_data/foo/' muestra todos los valores que están bajo foo ('foo.*' en el .properties).
-- Uso JavaScript para hacer POSTs donde haga falta cambiar los valores.
+- Para acceder a los datos de la configuración uso la URL 'http://localhost:<puerto>/config_data'. 
+- Si hago un GET, tomo el query string 'prefix=seg1.seg2.seg3' para indicar que es lo que quiero ver. Todos lso valores tienen un "edit" para permitir su modificación.
+- Una vez hechas las modificaciones, si se elige guardar, se realiza un POST a 'http://localhost:<puerto>/config_data' con 'var1SegA.var1SegB=valVar1&var2SegA.var2SegB.var2.SegC=valVar2'.
+- Uso abundante JavaScript.
+- Uso un editor en la interfaz web para crear nuevos trabajos. Es similar a la interfaz de configuración, pero uso un SVG para la transferencia en forma gráfica.
+

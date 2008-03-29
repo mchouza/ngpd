@@ -38,6 +38,9 @@
 #ifndef NGPD_MODULES_H
 #define NGPD_MODULES_H
 
+#include <module.h>
+#include <vector>
+#include <boost/shared_ptr.hpp>
 #include <Poco/Util/AbstractConfiguration.h>
 
 namespace Core
@@ -45,6 +48,9 @@ namespace Core
 	/// Contiene los módulos de la aplicación
 	class NGPDModules
 	{
+		/// Módulos cargados
+		std::vector<boost::shared_ptr<Module> > modules_;
+
 	public:
 		/// Constructor
 		NGPDModules(const Poco::Util::AbstractConfiguration& config);
