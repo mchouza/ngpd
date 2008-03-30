@@ -38,36 +38,47 @@
 #include "root_req_dispatcher.h"
 #include "config_data_req_proc.h"
 #include "error_req_proc.h"
-#include "proc_request.h"
 #include "req_processor.h"
 #include "static_req_proc.h"
+#include <Poco/URI.h>
 
 using namespace WebInterface;
 
-RootReqDispatcher::RootReqDispatcher()
+RootReqDispatcher::RootReqDispatcher() :
+pErrorReqProc_(new ErrorReqProc())
 {
 	// Inicializo el mapa de despacho
-	dispatchMap_["/config-data"].reset(new ConfigDataReqProc());
-	dispatchMap_["/error"].reset(new ErrorReqProc());
-	dispatchMap_["/static"].reset(new StaticReqProc());
+	dispatchMap_["config-data"].reset(new ConfigDataReqProc());
+	dispatchMap_["error"].reset(pErrorReqProc_.get());
+	dispatchMap_["static"].reset(new StaticReqProc());
 }
 
-void RootReqDispatcher::dispatch(const ProcRequest& procReq, 
+void RootReqDispatcher::dispatch(const Poco::Net::HTTPServerRequest& procReq,
 								 Poco::Net::HTTPServerResponse &out)
 {
+	using Poco::URI;
 	using std::string;
+	using std::vector;
+
+	// Construyo una URI
+	URI uri(procReq.getURI());
+
+	// Obtengo los segmentos del path
+	vector<string> pathSegs;
+	uri.getPathSegments(pathSegs);
+	if (pathSegs.size() == 0)
+		pathSegs.push_back(""); // Por consistencia
+
+	// Uso el primer segmento para determinar a donde despachar
+	TDispatchMap::iterator itDisp = dispatchMap_.find(pathSegs[0]);
 	
-	// Obtiene el primer elemento del path
-	string firstElem = procReq.getURI().substr(0, procReq.getURI().find('/'));
-
-	// Me fijo si lo encuentro
-	TDispatchMap::const_iterator itDisp = dispatchMap_.find(firstElem);
-
-	// Si no lo encuentro, es un error 404
+	// Si no encontré a donde mandarlo, es error
 	if (itDisp == dispatchMap_.end())
-		dispatch(ProcRequest("/error?code=404"), out);
+	{
+		pErrorReqProc_->process(URI("/error?code=404"), out);
+		return;
+	}
 
-	// Si encontré con qué, le saco el prefijo y lo proceso
-	// FIXME: SACAR EL PREFIJO
+	// Lo mando a donde corresponda
 	itDisp->second->process(procReq, out);
 }

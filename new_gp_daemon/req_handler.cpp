@@ -36,7 +36,6 @@
 //=============================================================================
 
 #include "req_handler.h"
-#include "proc_request.h"
 #include "req_dispatcher.h"
 #include "req_processor.h"
 #include "root_req_dispatcher.h"
@@ -57,5 +56,5 @@ void ReqHandler::handleRequest(Poco::Net::HTTPServerRequest& request,
 							   Poco::Net::HTTPServerResponse& response)
 {
 	// Le mando el pedido procesado y la ostream de la respuesta al dispatcher
-	pRootReqDispatcher_->dispatch(ProcRequest(request), response);
+	pRootReqDispatcher_->dispatch(request, response);
 }

@@ -50,6 +50,9 @@ namespace WebInterface
 		/// Tipo del mapa para despachar
 		typedef std::map<std::string, boost::shared_ptr<ReqProcessor> >
 			TDispatchMap;
+
+		/// Dispatcher especial para casos de error
+		boost::shared_ptr<ErrorReqProc> pErrorReqProc_;
 		
 		/// Mapa para despachar
 		TDispatchMap dispatchMap_;
@@ -59,7 +62,7 @@ namespace WebInterface
 		RootReqDispatcher();
 
 		/// Envía el pedido hacia donde deba procesarse
-		virtual void dispatch(const ProcRequest& procReq,
+		virtual void dispatch(const Poco::Net::HTTPServerRequest& procReq,
 			Poco::Net::HTTPServerResponse& out);
 	};
 }

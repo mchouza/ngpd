@@ -36,7 +36,6 @@
 //=============================================================================
 
 #include "static_req_proc.h"
-#include "proc_request.h"
 #include <algorithm>
 #include <fstream>
 
@@ -72,7 +71,7 @@ namespace
 	}
 }
 
-void StaticReqProc::process(const ProcRequest& procReq, 
+void StaticReqProc::process(const Poco::Net::HTTPServerRequest& procReq,
 							Poco::Net::HTTPServerResponse& resp)
 {
 	// FIXME: TEMPORAL!!!

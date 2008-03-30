@@ -60,7 +60,7 @@ namespace
 	}
 }
 
-void ConfigDataReqProc::process(const ProcRequest& procReq, 
+void ConfigDataReqProc::process(const Poco::Net::HTTPServerRequest& procReq,
 								Poco::Net::HTTPServerResponse& resp)
 {
 	using Poco::Util::AbstractConfiguration;

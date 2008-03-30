@@ -47,7 +47,7 @@ namespace WebInterface
 	{
 	public:
 		/// Toma el ProcReq y devuelve los datos del archivo correspondiente
-		virtual void process(const ProcRequest& procReq,
+		virtual void process(const Poco::Net::HTTPServerRequest& procReq,
 			Poco::Net::HTTPServerResponse& resp);
 	};
 }

@@ -39,14 +39,20 @@
 #define ERROR_REQ_PROC_H
 
 #include "req_processor.h"
+#include <Poco/URI.h>
 
 namespace WebInterface
 {
 	/// Procesa los pedidos de mensajes de error
 	class ErrorReqProc : public ReqProcessor
 	{
+	public:
 		/// Toma el ProcReq y devuelve el mensaje de error correspondiente
-		virtual void process(const ProcRequest& procReq,
+		virtual void process(const Poco::Net::HTTPServerRequest& procReq,
+			Poco::Net::HTTPServerResponse& resp);
+
+		/// Toma una URI y devuelve el mensaje de error correspondiente
+		virtual void process(const Poco::URI& uri, 
 			Poco::Net::HTTPServerResponse& resp);
 	};
 }
