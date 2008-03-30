@@ -59,14 +59,4 @@ namespace Err
 	public:
 		InfoException(const std::string& msg) : BaseException(msg) {}
 	};
-
-	/// Indica un error en el formato de un archivo INI
-	class INIFormatException : public FatalException
-	{
-	public:
-		INIFormatException(const std::string& line) :
-		  FatalException("Error de formato. No se entiende: '" + line + "'.")
-		{
-		}
-	};
 }

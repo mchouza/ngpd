@@ -40,20 +40,19 @@
 
 #include "req_dispatcher.h"
 #include "web_interface_fwd.h"
-#include <boost/scoped_ptr.hpp>
+#include <boost/shared_ptr.hpp>
 
 namespace WebInterface
 {
 	/// Se encarga de tomar las decisiones en base a las URI originales
 	class RootReqDispatcher : public ReqDispatcher
 	{
-		// FIXME: Organizar en forma más dinámica
+		/// Tipo del mapa para despachar
+		typedef std::map<std::string, boost::shared_ptr<ReqProcessor> >
+			TDispatchMap;
 		
-		/// Procesador de pedidos de contenido estático
-		boost::scoped_ptr<ReqProcessor> pStaticProc_;
-
-		/// Procesador de pedidos de datos de configuración
-		boost::scoped_ptr<ReqProcessor> pCfgDataProc_;
+		/// Mapa para despachar
+		TDispatchMap dispatchMap_;
 
 	public:
 		/// Constructor
