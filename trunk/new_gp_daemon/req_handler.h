@@ -38,14 +38,12 @@
 #ifndef REQ_HANDLER_H
 #define REQ_HANDLER_H
 
+#include "web_interface_fwd.h"
 #include <boost/scoped_ptr.hpp>
 #include <Poco/Net/HTTPRequestHandler.h>
 
 namespace WebInterface
 {
-	// Forward
-	class ReqDispatcher;
-	
 	/// Se ocupa de atender los pedidos HTTP y mandarlos hacia donde 
 	/// corresponda
 	class ReqHandler : public Poco::Net::HTTPRequestHandler

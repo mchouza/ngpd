@@ -47,6 +47,17 @@ namespace WebInterface
 	/// Representa un pedido HTTP procesado para eliminar lo que no me interesa
 	class ProcRequest
 	{
+	public:
+		// Tipos de método del pedido
+		enum EReqMethod
+		{
+			RM_GET, RM_POST
+		};
+
+	private:	
+		/// Clase de pedido
+		EReqMethod reqMethod_;
+		
 		/// URI relativa a la "raíz" del servidor
 		std::string uri_;
 
@@ -56,6 +67,9 @@ namespace WebInterface
 	public:
 		/// Lo construye a partir de un pedido HTTP
 		ProcRequest(const Poco::Net::HTTPServerRequest& request);
+
+		/// Lo construye a partir de solo una URI (obviamente el método es GET)
+		ProcRequest(const std::string& uri);
 
 		/// Obtiene la URI
 		const std::string& getURI() const
@@ -67,6 +81,12 @@ namespace WebInterface
 		const std::map<std::string, std::string>& getParams() const
 		{
 			return params_;
+		}
+
+		/// Obtiene el método
+		EReqMethod getMethod() const
+		{
+			return reqMethod_;
 		}
 	};
 }

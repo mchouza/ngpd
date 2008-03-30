@@ -186,6 +186,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\error_req_proc.h"
+					>
+				</File>
+				<File
 					RelativePath=".\proc_request.h"
 					>
 				</File>
@@ -227,6 +231,10 @@
 				>
 				<File
 					RelativePath=".\config_data_req_proc.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\error_req_proc.cpp"
 					>
 				</File>
 				<File

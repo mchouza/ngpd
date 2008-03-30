@@ -42,6 +42,7 @@ namespace WebInterface
 {
 	// Forwards
 	class ProcRequest;
+	class ReqDispatcher;
 	class ReqProcessor;
 	class WebServer;
 }

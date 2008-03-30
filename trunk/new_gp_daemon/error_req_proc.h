@@ -30,44 +30,25 @@
 //
 
 //=============================================================================
-// root_req_dispatcher.cpp
+// error_req_proc.h
 //-----------------------------------------------------------------------------
-// Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
+// Creado por Mariano M. Chouza | Empezado el 30 de marzo de 2008
 //=============================================================================
 
-#include "root_req_dispatcher.h"
-#include "config_data_req_proc.h"
-#include "error_req_proc.h"
-#include "proc_request.h"
+#ifndef ERROR_REQ_PROC_H
+#define ERROR_REQ_PROC_H
+
 #include "req_processor.h"
-#include "static_req_proc.h"
 
-using namespace WebInterface;
-
-RootReqDispatcher::RootReqDispatcher()
+namespace WebInterface
 {
-	// Inicializo el mapa de despacho
-	dispatchMap_["/config-data"].reset(new ConfigDataReqProc());
-	dispatchMap_["/error"].reset(new ErrorReqProc());
-	dispatchMap_["/static"].reset(new StaticReqProc());
+	/// Procesa los pedidos de mensajes de error
+	class ErrorReqProc : public ReqProcessor
+	{
+		/// Toma el ProcReq y devuelve el mensaje de error correspondiente
+		virtual void process(const ProcRequest& procReq,
+			Poco::Net::HTTPServerResponse& resp);
+	};
 }
 
-void RootReqDispatcher::dispatch(const ProcRequest& procReq, 
-								 Poco::Net::HTTPServerResponse &out)
-{
-	using std::string;
-	
-	// Obtiene el primer elemento del path
-	string firstElem = procReq.getURI().substr(0, procReq.getURI().find('/'));
-
-	// Me fijo si lo encuentro
-	TDispatchMap::const_iterator itDisp = dispatchMap_.find(firstElem);
-
-	// Si no lo encuentro, es un error 404
-	if (itDisp == dispatchMap_.end())
-		dispatch(ProcRequest("/error?code=404"), out);
-
-	// Si encontré con qué, le saco el prefijo y lo proceso
-	// FIXME: SACAR EL PREFIJO
-	itDisp->second->process(procReq, out);
-}
+#endif

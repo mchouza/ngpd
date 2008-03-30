@@ -30,44 +30,58 @@
 //
 
 //=============================================================================
-// root_req_dispatcher.cpp
+// error_req_proc.cpp
 //-----------------------------------------------------------------------------
-// Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
+// Creado por Mariano M. Chouza | Empezado el 30 de marzo de 2008
 //=============================================================================
 
-#include "root_req_dispatcher.h"
-#include "config_data_req_proc.h"
 #include "error_req_proc.h"
 #include "proc_request.h"
-#include "req_processor.h"
-#include "static_req_proc.h"
+#include <boost/lexical_cast.hpp>
 
 using namespace WebInterface;
 
-RootReqDispatcher::RootReqDispatcher()
+namespace
 {
-	// Inicializo el mapa de despacho
-	dispatchMap_["/config-data"].reset(new ConfigDataReqProc());
-	dispatchMap_["/error"].reset(new ErrorReqProc());
-	dispatchMap_["/static"].reset(new StaticReqProc());
+	/// Maneja un mensaje de error con código numérico
+	void error(unsigned errCode, Poco::Net::HTTPServerResponse& resp)
+	{
+		// FIXME: Usar una plantilla
+		resp.send() << "<h1>Error " << errCode << "</h1>";
+	}
+
+	/// Maneja un mensaje de error con código en un string
+	void error(const std::string& strErrCode, 
+		Poco::Net::HTTPServerResponse& resp)
+	{
+		using boost::bad_lexical_cast;
+		using boost::lexical_cast;
+		
+		// Convierto el código a un número y lo proceso...
+		try
+		{
+			unsigned errCode = lexical_cast<unsigned>(strErrCode);
+			error(errCode, resp);
+		}
+		catch (bad_lexical_cast&)
+		{
+			error(400, resp);
+		}
+	}
 }
 
-void RootReqDispatcher::dispatch(const ProcRequest& procReq, 
-								 Poco::Net::HTTPServerResponse &out)
+void ErrorReqProc::process(const ProcRequest& procReq,
+						   Poco::Net::HTTPServerResponse& resp)
 {
+	using std::map;
 	using std::string;
 	
-	// Obtiene el primer elemento del path
-	string firstElem = procReq.getURI().substr(0, procReq.getURI().find('/'));
-
-	// Me fijo si lo encuentro
-	TDispatchMap::const_iterator itDisp = dispatchMap_.find(firstElem);
-
-	// Si no lo encuentro, es un error 404
-	if (itDisp == dispatchMap_.end())
-		dispatch(ProcRequest("/error?code=404"), out);
-
-	// Si encontré con qué, le saco el prefijo y lo proceso
-	// FIXME: SACAR EL PREFIJO
-	itDisp->second->process(procReq, out);
+	// Tiene que ser un GET con un único parámetro 'code'
+	const map<string, string>& params = procReq.getParams();
+	map<string, string>::const_iterator it = params.find("code");
+	if (procReq.getMethod() != ProcRequest::RM_GET || params.size() != 1 ||
+		it != params.end())
+		error(400, resp);
+	else
+		error(it->second, resp);
 }

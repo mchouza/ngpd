@@ -36,6 +36,7 @@
 //=============================================================================
 
 #include "proc_request.h"
+#include "exceptions.h"
 
 using namespace WebInterface;
 
@@ -43,4 +44,22 @@ ProcRequest::ProcRequest(const Poco::Net::HTTPServerRequest& req) :
 uri_(req.getURI()),
 params_()
 {
+	using Err::FatalException;
+	using Poco::Net::HTTPRequest;
+
+	// Si no es un método soportado, error al construir
+	if (req.getMethod() == HTTPRequest::HTTP_GET)
+		reqMethod_ = RM_GET;
+	else if (req.getMethod() == HTTPRequest::HTTP_POST)
+		reqMethod_ = RM_POST;
+	else
+		throw FatalException("Método no soportado.");
+}
+
+ProcRequest::ProcRequest(const std::string& uri) :
+uri_(uri),
+params_(),
+reqMethod_(RM_GET)
+{
+	// FIXME: SEPARAR LOS PARÁMETROS
 }
