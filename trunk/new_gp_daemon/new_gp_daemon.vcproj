@@ -190,10 +190,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\proc_request.h"
-					>
-				</File>
-				<File
 					RelativePath=".\req_dispatcher.h"
 					>
 				</File>
@@ -235,10 +231,6 @@
 				</File>
 				<File
 					RelativePath=".\error_req_proc.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\proc_request.cpp"
 					>
 				</File>
 				<File

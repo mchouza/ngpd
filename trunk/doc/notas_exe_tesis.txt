@@ -38,4 +38,6 @@ CONFIG
 - Una vez hechas las modificaciones, si se elige guardar, se realiza un POST a 'http://localhost:<puerto>/config_data' con 'var1SegA.var1SegB=valVar1&var2SegA.var2SegB.var2.SegC=valVar2'.
 - Uso abundante JavaScript.
 - Uso un editor en la interfaz web para crear nuevos trabajos. Es similar a la interfaz de configuración, pero uso un SVG para la transferencia en forma gráfica.
+- Uso HTMLForm para parsear los query strings.
+- Probablemente convenga hacer un nuevo ProcReq, ya que el actual es muy inflexible.
 

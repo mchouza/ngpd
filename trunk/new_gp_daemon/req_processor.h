@@ -39,6 +39,7 @@
 #define REQ_PROCESSOR_H
 
 #include "web_interface_fwd.h"
+#include <Poco/Net/HTTPServerRequest.h>
 #include <Poco/Net/HTTPServerResponse.h>
 
 namespace WebInterface
@@ -54,7 +55,7 @@ namespace WebInterface
 		virtual ~ReqProcessor() {}
 		
 		/// Toma el ProcReq y devuelve los datos que correspondan por la stream
-		virtual void process(const ProcRequest& procReq,
+		virtual void process(const Poco::Net::HTTPServerRequest& procReq,
 			Poco::Net::HTTPServerResponse& resp) = 0;
 	};
 }

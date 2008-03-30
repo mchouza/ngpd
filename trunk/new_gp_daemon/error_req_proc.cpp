@@ -36,8 +36,8 @@
 //=============================================================================
 
 #include "error_req_proc.h"
-#include "proc_request.h"
 #include <boost/lexical_cast.hpp>
+#include <Poco/URI.h>
 
 using namespace WebInterface;
 
@@ -70,18 +70,39 @@ namespace
 	}
 }
 
-void ErrorReqProc::process(const ProcRequest& procReq,
+void ErrorReqProc::process(const Poco::Net::HTTPServerRequest& procReq,
 						   Poco::Net::HTTPServerResponse& resp)
 {
+	using Poco::URI;
 	using std::map;
 	using std::string;
 	
-	// Tiene que ser un GET con un único parámetro 'code'
-	const map<string, string>& params = procReq.getParams();
-	map<string, string>::const_iterator it = params.find("code");
-	if (procReq.getMethod() != ProcRequest::RM_GET || params.size() != 1 ||
-		it != params.end())
+	// Si el método es incorrecto, es bad request
+	if (procReq.getMethod() != procReq.HTTP_GET)
+	{
+		error(400, resp);
+		return;
+	}
+
+	// Hago un parse de la URI
+	URI uri(procReq.getURI());
+
+	// La mando al procesamiento por URI
+	process(uri, resp);
+}
+
+void ErrorReqProc::process(const Poco::URI& uri, 
+						   Poco::Net::HTTPServerResponse& resp)
+{
+	using std::string;
+	
+	// Me fijo si el query string empieza con code
+	string qs = uri.getQuery();
+	string prefix("code=");
+	if (qs.find(prefix) != 0)
+		// Si no está bien el formato, es error 400
 		error(400, resp);
 	else
-		error(it->second, resp);
+		// Caso contrario, mando el error que corresponda
+		error(qs.substr(prefix.size()), resp);
 }
