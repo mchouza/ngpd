@@ -1,6 +1,8 @@
 #summary Creación de módulos para GPGD.
 #labels Deprecated
 
+*OBSOLETO - MODIFICADO EN NGPD*
+
 = Introducción =
 
 En esta página explico los pasos requeridos para crear módulos para el sistema GPGD, cualquiera sea la función que realicen. Los módulos deben ser compatibles con el modelo de exportación de símbolos utilizado por [http://www.appinf.com/poco/ POCO].
