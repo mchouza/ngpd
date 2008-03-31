@@ -161,7 +161,7 @@ namespace
 			// Encontré dependencias no satisfechas con el módulo?
 			if (!modules[i])
 				// Empiezo desde el principio
-				i = 0; // ATENCIÓN!! Modifico el índice del loop
+				i = -1; // ATENCIÓN!! Modifico el índice del loop
 		}
 
 		// Si llegué acá es porque todos los módulos estaban en alguna de dos
@@ -191,6 +191,22 @@ namespace
 				modules[i]->GetName() + ".");
 		}
 	}
+
+	/// Limpia el vector de módulos, eliminando los punteros nulos
+	void cleanModulesVec(std::vector<boost::shared_ptr<Module> >& modules)
+	{
+		using boost::shared_ptr;
+		using std::vector;
+		
+		// Creo un vector con los punteros no nulos
+		vector<shared_ptr<Module> > cleanVec;
+		for (size_t i = 0; i < modules.size(); i++)
+			if (modules[i])
+				cleanVec.push_back(modules[i]);
+
+		// Intercambio contenidos
+		modules.swap(cleanVec);
+	}
 }
 
 NGPDModules::NGPDModules(const Poco::Util::AbstractConfiguration& config)
@@ -201,11 +217,14 @@ NGPDModules::NGPDModules(const Poco::Util::AbstractConfiguration& config)
 
 	// Obtengo el path del directorio de los módulos
 	string modulesDirPath = getPath(PATH_APP_DATA) +
-		config.getString("modulesRelPath");
+		config.getString("modules.relPath");
 
 	// Cargo los módulos en ese directorio
 	loadModulesAtDir(modules_, modulesDirPath);
 
 	// Reviso y satisfago a las dependencias
 	checkNSatisfyDependencies(modules_);
+
+	// Limpio el vector de módulos
+	cleanModulesVec(modules_);
 }

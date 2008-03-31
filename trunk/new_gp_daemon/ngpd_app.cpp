@@ -53,6 +53,8 @@ NGPDApp::~NGPDApp()
 
 void NGPDApp::initialize(Poco::Util::Application& self)
 {
+	using Poco::Util::ConfigurationView;
+	
 	// Llamo a la implementación de la clase base
 	ServerApplication::initialize(self);
 
@@ -65,6 +67,10 @@ void NGPDApp::initialize(Poco::Util::Application& self)
 	// Cargo la configuración
 	log("Cargando la configuración...", 1);
 	loadConfiguration();
+
+	// Cargo los módulos
+	log("Cargando los módulos...", 1);
+	pMods_.reset(new NGPDModules(config()));
 
 	// Inicio el servidor web
 	log("Iniciando servidor web...");
