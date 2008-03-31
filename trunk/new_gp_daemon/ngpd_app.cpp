@@ -53,27 +53,24 @@ NGPDApp::~NGPDApp()
 
 void NGPDApp::initialize(Poco::Util::Application& self)
 {
-	using Poco::Util::ConfigurationView;
-	
+	// Cargo la configuración
+	loadConfiguration();
+
 	// Llamo a la implementación de la clase base
 	ServerApplication::initialize(self);
 
-	// FIXME: Esto tiene que ir en otro lado
-	logLevel_ = 0;
-
 	// Indico que estoy inicializando
-	log("Iniciando NGPD (New Genetic Programming Daemon)...");
+	logger().information("Iniciando NGPD (New Genetic Programming Daemon)...");
 
-	// Cargo la configuración
-	log("Cargando la configuración...", 1);
-	loadConfiguration();
+	// FIXME: El servidor y los módulso pueden usar sus propios loggers,
+	// conectados a éste
 
 	// Cargo los módulos
-	log("Cargando los módulos...", 1);
+	//logger().information("Cargando los módulos...");
 	pMods_.reset(new NGPDModules(config()));
 
 	// Inicio el servidor web
-	log("Iniciando servidor web...");
+	//logger().information("Iniciando servidor web...");
 	pWebServer_.reset(new WebInterface::WebServer());
 }
 
@@ -115,19 +112,4 @@ int NGPDApp::main(const std::vector<std::string>& args)
 
 	// Terminé OK
 	return EXIT_OK;
-}
-
-void NGPDApp::log(const std::string& msg, int logLevel)
-{
-	using std::string;
-	
-	// Actualizo el log level
-	if (logLevel >= 0)
-		logLevel_ = logLevel;
-
-	// Armo el tab string
-	string tabString(logLevel_ * 2, ' ');
-
-	// Imprimo el mensaje
-	logger().information(tabString + msg);
 }

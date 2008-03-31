@@ -51,7 +51,9 @@ namespace
 		c.keys("", keys);
 		for (size_t i = 0; i < keys.size(); i++)
 		{
-			r << "<li>" << keys[i];
+			r << "<li>" << "<b>" << keys[i] << "</b>";
+			if (c.hasProperty(keys[i]))
+				r << " - " << c.getRawString(keys[i]);		
 			AbstractConfiguration& cc = *c.createView(keys[i]);
 			recPrint(r, cc);
 			r << "</li>";

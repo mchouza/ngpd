@@ -40,4 +40,6 @@ CONFIG
 - Uso un editor en la interfaz web para crear nuevos trabajos. Es similar a la interfaz de configuración, pero uso un SVG para la transferencia en forma gráfica.
 - Uso HTMLForm para parsear los query strings.
 - Probablemente convenga hacer un nuevo ProcReq, ya que el actual es muy inflexible.
+- Agregar string con fecha y hora de compilación a la aplicación y a los módulos.
+- Migrar los módulos (excepto el de SPICE) al nuevo proyecto.
 

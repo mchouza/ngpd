@@ -48,10 +48,6 @@ namespace Core
 	/// Clase de la aplicación servidor
 	class NGPDApp : public Poco::Util::ServerApplication
 	{
-		// FIXME: Mandar a una clase aparte
-		/// Nivel de log
-		int logLevel_;
-
 		/// Servidor web para la interfaz
 		boost::scoped_ptr<WebInterface::WebServer> pWebServer_;
 
@@ -77,10 +73,6 @@ namespace Core
 
 		/// Método que realiza el trabajo
 		virtual int main(const std::vector<std::string>& args);
-
-		/// Realiza el log de una cierta información con un cierto nivel 
-		/// jerárquico (el valor por defecto mantiene el nivel previo)
-		void log(const std::string& msg, int logLevel = -1);
 	};
 }
 
