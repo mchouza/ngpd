@@ -1,6 +1,11 @@
 OBJETIVOS (con tiempos)
 =======================
-- DETERMINAR.
+- Agregar a Modules como subsistema. [Miércoles 2/4]
+- Agregar al JobManager como subsistema. [Miércoles 2/4]
+- Integrar con CTemplate (ver prueba en el Sandbox). [Lunes 31/3]
+- Hacer un template que permita editar valores y que los mande modificados en un POST. [Miércoles 2/4]
+- Arreglar el sistema de logging. [Jueves 3/4]
+- Corriendo trabajos ingresados por la interfaz (dividir en subtrabajos). [Hasta el Lunes 7/4]
 
 OBJETIVOS CUMPLIDOS
 ===================
@@ -8,38 +13,40 @@ OBJETIVOS CUMPLIDOS
 - Cargar módulos en base al XML. [Miércoles 26/3] (No realmente, abandoné el XML y voy a cargar en base al .properties)
 - Conectar configuración con la interfaz web. Agregar transaccionalidad al manejo de archivos. [Jueves 27/3] (Terminado parcialmente, no hay escritura ni transaccionalidad. Funcionalidad básica de despliegue demostrada.)
 
-GENERALIDADES
-=============
+FEATURES
+========
 - Es un daemon (ngpd).
 - Se puede consultar su estado por "loopback", lo que implica que tiene info estadística en memoria.
 - Toma un "trabajo" desde APPDATA y lo ejecuta.
 - Admite límites en la RAM empleada para la población, ver como implementar.
 - Admite terminar el trabajo por tiempo o por cantidad de generaciones.
-- Admite límites en la población en cantidad de individuos.
+- Admite límites en la cantidad de individuos en la población.
 - Uso un sistema transaccional para actualizar los trabajos.
 - Guardo info estadística junto al trabajo.
+
+IMPLEMENTACIÓN
+==============
+
+GENERALIDADES
+-------------
 - El trabajo le indica qué módulos usar para cada cosa.
 - El trabajo lleva asociado un archivo ".bin" donde guarda la población.
 - Tomo la mayoría del manejo de módulos de 'gpgd'.
+- Migrar los módulos (excepto el de SPICE, por razones de tamaño y licencia) al nuevo proyecto.
 
 CONFIG
-======
-- Uso como base la config de GPGD, una configuración jerárquica.
+------
 - Tengo dos archivos: 
   * Una configuración base, imposible de modificar por la interfaz web y que contiene cosas como paths de los templates.
-  * Una configuración modificable, que se almcane aen archivos pero puede modificarse desde la interfaz web.
-- La interfaz web tiene un "request handler" que manda todo el "processed request" (URI + datos del post) a un ReqDispatcher (junto con la ostream de salida).
-- El ReqDispatcher toma el "processed request" y puede:
-  a) Una vez procesado, enviarlo junto con la ostream a otro ReqDispatcher.
-  b) Usar un map para despacharlo junto con la ostream a un FinalReqHandler.
-- El ReqProcessor toma el request procesado y una ostream y saca por la ostream el texto de la salida.
+  * Una configuración modificable, que se almacene en archivos pero puede modificarse desde la interfaz web.
+
 - Para acceder a los datos de la configuración uso la URL 'http://localhost:<puerto>/config_data'. 
-- Si hago un GET, tomo el query string 'prefix=seg1.seg2.seg3' para indicar que es lo que quiero ver. Todos lso valores tienen un "edit" para permitir su modificación.
+- Si hago un GET, tomo el query string 'prefix=seg1.seg2.seg3' para indicar que es lo que quiero ver.
 - Una vez hechas las modificaciones, si se elige guardar, se realiza un POST a 'http://localhost:<puerto>/config_data' con 'var1SegA.var1SegB=valVar1&var2SegA.var2SegB.var2.SegC=valVar2'.
-- Uso abundante JavaScript.
+- Uso Javascript para crear edits en los valores que quiera cambiar.
+
 - Uso un editor en la interfaz web para crear nuevos trabajos. Es similar a la interfaz de configuración, pero uso un SVG para la transferencia en forma gráfica.
+
 - Uso HTMLForm para parsear los query strings.
 - Probablemente convenga hacer un nuevo ProcReq, ya que el actual es muy inflexible.
 - Agregar string con fecha y hora de compilación a la aplicación y a los módulos.
-- Migrar los módulos (excepto el de SPICE) al nuevo proyecto.
-

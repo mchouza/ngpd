@@ -39,17 +39,24 @@
 #define OS_DEP_H
 
 #include <string>
+#include <Poco/Path.h>
 
 namespace OSDep
 {
-	/// Paths que se pueden pedir
+	/// Paths absolutos que se pueden pedir
 	enum EPath
 	{
 		PATH_APP_DATA, PATH_CFG_BASE, PATH_CFG_WRITEABLE
 	};
 	
-	/// Devuelve el path pedido
+	/// Devuelve el path absoluto pedido
 	std::string getPath(EPath pathType);
+
+	/// Cambia de directorio en base a una string
+	void chDir(const std::string& newPath);
+
+	/// Cambia de directorio con un path de POCO
+	void chDir(const Poco::Path& newPath);
 
 	/// Desactiva los dialogs de error del sistema
 	void disableErrorDialogs();

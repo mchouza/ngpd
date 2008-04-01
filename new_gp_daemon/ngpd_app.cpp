@@ -62,7 +62,7 @@ void NGPDApp::initialize(Poco::Util::Application& self)
 	// Indico que estoy inicializando
 	logger().information("Iniciando NGPD (New Genetic Programming Daemon)...");
 
-	// FIXME: El servidor y los módulso pueden usar sus propios loggers,
+	// FIXME: El servidor y los módulos pueden usar sus propios loggers,
 	// conectados a éste
 
 	// Cargo los módulos
@@ -85,11 +85,17 @@ void NGPDApp::uninitialize()
 
 int NGPDApp::loadConfiguration(int priority)
 {
+	using OSDep::chDir;
 	using OSDep::getPath;
+	using OSDep::PATH_APP_DATA;
 	using OSDep::PATH_CFG_BASE;
 	using OSDep::PATH_CFG_WRITEABLE;
+	using Poco::Path;
 	using Poco::Util::PropertyFileConfiguration;
-	
+
+	// Cambio al directorio de trabajo correcto
+	chDir(getPath(PATH_APP_DATA));
+
 	// Cargo la configuración base
 	config().add(
 		new PropertyFileConfiguration(getPath(PATH_CFG_BASE)),

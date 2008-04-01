@@ -30,57 +30,72 @@
 //
 
 //=============================================================================
-// root_req_dispatcher.cpp
+// log_req_proc.cpp
 //-----------------------------------------------------------------------------
-// Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
+// Creado por Mariano M. Chouza | Empezado el 31 de marzo de 2008
 //=============================================================================
 
-#include "root_req_dispatcher.h"
-#include "config_data_req_proc.h"
-#include "error_req_proc.h"
 #include "log_req_proc.h"
-#include "req_processor.h"
-#include "static_req_proc.h"
-#include <Poco/URI.h>
+#include <fstream>
+#include <sstream>
+#include <port.h> // El orden importa, debe ser anterior a 'template.h'
+#include <google/template.h>
+#include <Poco/Net/HTTPServerRequest.h>
 
 using namespace WebInterface;
 
-RootReqDispatcher::RootReqDispatcher() :
-pErrorReqProc_(new ErrorReqProc())
+void LogReqProc::process(const Poco::Net::HTTPServerRequest& procReq,
+						 Poco::Net::HTTPServerResponse& resp)
 {
-	// Inicializo el mapa de despacho
-	dispatchMap_["config-data"].reset(new ConfigDataReqProc());
-	dispatchMap_["error"].reset(pErrorReqProc_.get());
-	dispatchMap_["log"].reset(new LogReqProc);
-	dispatchMap_["static"].reset(new StaticReqProc());
-}
-
-void RootReqDispatcher::dispatch(const Poco::Net::HTTPServerRequest& procReq,
-								 Poco::Net::HTTPServerResponse &out)
-{
-	using Poco::URI;
+	using google::DO_NOT_STRIP;
+	using google::Template;
+	using google::TemplateDictionary;
+	using google::TemplateString;
+	using std::ifstream;
+	using std::ios;
+	using std::ostringstream;
 	using std::string;
 	using std::vector;
-
-	// Construyo una URI
-	URI uri(procReq.getURI());
-
-	// Obtengo los segmentos del path
-	vector<string> pathSegs;
-	uri.getPathSegments(pathSegs);
-	if (pathSegs.size() == 0)
-		pathSegs.push_back(""); // Por consistencia
-
-	// Uso el primer segmento para determinar a donde despachar
-	TDispatchMap::iterator itDisp = dispatchMap_.find(pathSegs[0]);
 	
-	// Si no encontré a donde mandarlo, es error
-	if (itDisp == dispatchMap_.end())
+	// FIXME: Manejar errores en el pedido o por ausencia de log
+	// FIXME: Sacar el path del archivo de log por la configuración, no ponerlo
+	// "hardcoded".
+	// FIXME: Sacar el path de los templates por la configuración, no ponerlo
+	// "hardcoded".
+	// FIXME: Pensar como simplificar la creación de la salida
+
+	// Trato de abrir el archivo
+	ifstream logFile("NGPD.log", ios::in);
+
+	// Diccionario
+	TemplateDictionary dict("log");
+
+	if (logFile.is_open())
 	{
-		pErrorReqProc_->process(URI("/error?code=404"), out);
-		return;
+		// Stream para leer el archivo
+		ostringstream oss;
+		oss << logFile.rdbuf();
+
+		// Relleno el diccionario
+		dict.SetValue("LOG", oss.str());
+	}
+	else
+	{
+		// Relleno el diccionario indicando error
+		dict.SetValue("LOG", "-- ERROR NO SE CARGÓ EL LOG --");
 	}
 
-	// Lo mando a donde corresponda
-	itDisp->second->process(procReq, out);
+	// Salida
+	string outStr;
+
+	// Cargo y expando el template
+	Template* pTemplate = Template::GetTemplate("templates/log.tpl", 
+		DO_NOT_STRIP);
+	pTemplate->Expand(&outStr, &dict);
+
+	// Mando un archivo HTML
+	resp.setContentType("text/html");
+
+	// Copio el template expandido a la salida
+	resp.send() << outStr;
 }
