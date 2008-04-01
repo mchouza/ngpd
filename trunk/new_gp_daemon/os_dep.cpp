@@ -41,6 +41,7 @@
 
 #ifdef WIN32
 
+#include <direct.h>
 #include <shlobj.h>
 
 std::string OSDep::getPath(EPath pathType)
@@ -54,8 +55,8 @@ std::string OSDep::getPath(EPath pathType)
 		throw FatalException(	"No pudieron encontrarse los archivos de "
 								"configuración.");
 
-	const string cfgBaseRelPath = "\\NGPD\\base_config.properties";
-	const string cfgWritRelPath = "\\NGPD\\xtra_config.properties";
+	const string cfgBaseRelPath = "\\NGPD\\config\\base_config.properties";
+	const string cfgWritRelPath = "\\NGPD\\config\\xtra_config.properties";
 	const string appdataRelPath = "\\NGPD\\";
 
 	switch (pathType)
@@ -70,6 +71,20 @@ std::string OSDep::getPath(EPath pathType)
 
 	assert(!"Falta un tipo de path en EPath");
 	return "INVALID_NEVER_REACHED";
+}
+
+void OSDep::chDir(const std::string& newPath)
+{
+	using Poco::Path;
+	
+	_chdir(newPath.c_str());
+}
+
+void OSDep::chDir(const Poco::Path& newPath)
+{
+	using Poco::Path;
+	
+	chDir(newPath.toString(Path::PATH_WINDOWS));
 }
 
 void OSDep::disableErrorDialogs()

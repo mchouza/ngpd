@@ -43,9 +43,6 @@
 
 namespace WebInterface
 {
-	// Forward
-	class ProcRequest;
-	
 	/// Es la base abstracta de la clases encargadas de despachar los pedidos
 	/// en la dirección correcta
 	class ReqDispatcher

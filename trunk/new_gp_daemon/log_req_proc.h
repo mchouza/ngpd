@@ -30,57 +30,25 @@
 //
 
 //=============================================================================
-// root_req_dispatcher.cpp
+// log_req_proc.h
 //-----------------------------------------------------------------------------
-// Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
+// Creado por Mariano M. Chouza | Empezado el 31 de marzo de 2008
 //=============================================================================
 
-#include "root_req_dispatcher.h"
-#include "config_data_req_proc.h"
-#include "error_req_proc.h"
-#include "log_req_proc.h"
+#ifndef LOG_REQ_PROC_H
+#define LOG_REQ_PROC_H
+
 #include "req_processor.h"
-#include "static_req_proc.h"
-#include <Poco/URI.h>
 
-using namespace WebInterface;
-
-RootReqDispatcher::RootReqDispatcher() :
-pErrorReqProc_(new ErrorReqProc())
+namespace WebInterface
 {
-	// Inicializo el mapa de despacho
-	dispatchMap_["config-data"].reset(new ConfigDataReqProc());
-	dispatchMap_["error"].reset(pErrorReqProc_.get());
-	dispatchMap_["log"].reset(new LogReqProc);
-	dispatchMap_["static"].reset(new StaticReqProc());
-}
-
-void RootReqDispatcher::dispatch(const Poco::Net::HTTPServerRequest& procReq,
-								 Poco::Net::HTTPServerResponse &out)
-{
-	using Poco::URI;
-	using std::string;
-	using std::vector;
-
-	// Construyo una URI
-	URI uri(procReq.getURI());
-
-	// Obtengo los segmentos del path
-	vector<string> pathSegs;
-	uri.getPathSegments(pathSegs);
-	if (pathSegs.size() == 0)
-		pathSegs.push_back(""); // Por consistencia
-
-	// Uso el primer segmento para determinar a donde despachar
-	TDispatchMap::iterator itDisp = dispatchMap_.find(pathSegs[0]);
-	
-	// Si no encontré a donde mandarlo, es error
-	if (itDisp == dispatchMap_.end())
+	/// Maneja los pedidos de ver el log
+	class LogReqProc : public ReqProcessor
 	{
-		pErrorReqProc_->process(URI("/error?code=404"), out);
-		return;
-	}
-
-	// Lo mando a donde corresponda
-	itDisp->second->process(procReq, out);
+		/// Toma el ProcReq y devuelve el log, si el pedido es correcto
+		virtual void process(const Poco::Net::HTTPServerRequest& procReq,
+			Poco::Net::HTTPServerResponse& resp);
+	};
 }
+
+#endif

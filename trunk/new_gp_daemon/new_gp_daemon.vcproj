@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="P:\poco\Util\include;P:\poco\Foundation\include;P:\poco\Net\include;p:\boost\;p:\Thesis\common"
+				AdditionalIncludeDirectories="P:\poco\Util\include;P:\poco\Foundation\include;P:\poco\Net\include;p:\boost\;p:\Thesis\common;&quot;p:\ctemplate-0.9\src\windows&quot;;&quot;p:\ctemplate-0.9\src&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,9 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="PocoFoundationd.lib PocoUtild.lib PocoNetd.lib"
+				AdditionalDependencies="PocoFoundationd.lib PocoUtild.lib PocoNetd.lib libctemplate-debug.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="p:\Poco\lib"
+				AdditionalLibraryDirectories="p:\Poco\lib;&quot;p:\ctemplate-0.9\debug&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -118,7 +118,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="P:\poco\Util\include;P:\poco\Foundation\include;P:\poco\Net\include;p:\boost;p:\Thesis\common"
+				AdditionalIncludeDirectories="P:\poco\Util\include;P:\poco\Foundation\include;P:\poco\Net\include;p:\boost;p:\Thesis\common;&quot;p:\ctemplate-0.9\src\windows&quot;;&quot;p:\ctemplate-0.9\src&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -137,9 +137,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="PocoFoundation.lib PocoUtil.lib PocoNet.lib"
+				AdditionalDependencies="PocoFoundation.lib PocoUtil.lib PocoNet.lib libctemplate.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="p:\poco\lib"
+				AdditionalLibraryDirectories="p:\poco\lib;&quot;p:\ctemplate-0.9\release&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -190,6 +190,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\log_req_proc.h"
+					>
+				</File>
+				<File
 					RelativePath=".\req_dispatcher.h"
 					>
 				</File>
@@ -231,6 +235,10 @@
 				</File>
 				<File
 					RelativePath=".\error_req_proc.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\log_req_proc.cpp"
 					>
 				</File>
 				<File
