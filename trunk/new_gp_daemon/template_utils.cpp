@@ -30,48 +30,49 @@
 //
 
 //=============================================================================
-// ngpd_modules.h
+// template_utils.cpp
 //-----------------------------------------------------------------------------
-// Creado por Mariano M. Chouza | Empezado el 28 de marzo de 2008
+// Creado por Mariano M. Chouza | Empezado el 1 de abril de 2008
 //=============================================================================
 
-#ifndef NGPD_MODULES_H
-#define NGPD_MODULES_H
+#include "template_utils.h"
+#include <port.h> // El orden importa, debe ser anterior a 'template.h'
+#include <google/template.h>
 
-#include <module.h>
-#include <vector>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-#include <Poco/Util/AbstractConfiguration.h>
-#include <Poco/Util/Subsystem.h>
+namespace Utils { namespace Template {
 
-namespace Core
+void fillHeader(google::TemplateDictionary& dict, const std::string& pageTitle)
 {
-	/// Contiene los módulos de la aplicación
-	class NGPDModules : public Poco::Util::Subsystem
-	{
-		/// Nombre del subsistema
-		static const char* name_;
+	using google::TemplateDictionary;
+	
+	TemplateDictionary* pHeaderDict = dict.AddIncludeDictionary("HEADER");
+	pHeaderDict->SetFilename("header.tpl");
 
-		/// Aplicación
-		Poco::Util::Application& app_;
-		
-		/// Módulos cargados
-		std::vector<boost::shared_ptr<Module> > modules_;
-
-	public:
-		/// Constructor
-		NGPDModules(Poco::Util::Application& app);
-
-		/// Inicialización
-		virtual void initialize(Poco::Util::Application&);
-
-		/// Liberación de recursos
-		virtual void uninitialize();
-
-		/// Obtiene el nombre
-		virtual const char* name() const;
-	};
 }
 
-#endif
+void fillPageHeader(google::TemplateDictionary& dict)
+{
+	using google::TemplateDictionary;
+	
+	TemplateDictionary* pPageHeaderDict = 
+		dict.AddIncludeDictionary("PAGE_HEADER");
+	pPageHeaderDict->SetFilename("page_header.tpl");
+}
+
+void fillMenu(google::TemplateDictionary& dict)
+{
+	using google::TemplateDictionary;
+	
+	TemplateDictionary* pMenuDict = dict.AddIncludeDictionary("MENU");
+	pMenuDict->SetFilename("menu.tpl");
+}
+
+void fillFooter(google::TemplateDictionary& dict)
+{
+	using google::TemplateDictionary;
+	
+	TemplateDictionary* pFooterDict = dict.AddIncludeDictionary("FOOTER");
+	pFooterDict->SetFilename("footer.tpl");
+}
+
+}} // Cierro los namespaces

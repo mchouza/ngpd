@@ -30,48 +30,34 @@
 //
 
 //=============================================================================
-// ngpd_modules.h
+// template_utils.h
 //-----------------------------------------------------------------------------
-// Creado por Mariano M. Chouza | Empezado el 28 de marzo de 2008
+// Creado por Mariano M. Chouza | Empezado el 1 de abril de 2008
 //=============================================================================
 
-#ifndef NGPD_MODULES_H
-#define NGPD_MODULES_H
+#ifndef TEMPLATE_UTILS_H
+#define TEMPLATE_UTILS_H
 
-#include <module.h>
-#include <vector>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-#include <Poco/Util/AbstractConfiguration.h>
-#include <Poco/Util/Subsystem.h>
+#include "utils_fwd.h"
+#include <string>
 
-namespace Core
+namespace Utils
 {
-	/// Contiene los módulos de la aplicación
-	class NGPDModules : public Poco::Util::Subsystem
+	namespace Template
 	{
-		/// Nombre del subsistema
-		static const char* name_;
+		/// Rellena el header en el diccionario del template
+		void fillHeader(google::TemplateDictionary& dict, 
+			const std::string& pageTitle);
 
-		/// Aplicación
-		Poco::Util::Application& app_;
-		
-		/// Módulos cargados
-		std::vector<boost::shared_ptr<Module> > modules_;
+		/// Rellena el header de la página en el diccionario del template
+		void fillPageHeader(google::TemplateDictionary& dict);
 
-	public:
-		/// Constructor
-		NGPDModules(Poco::Util::Application& app);
+		/// Rellena el menú en el diccionario del template
+		void fillMenu(google::TemplateDictionary& dict);
 
-		/// Inicialización
-		virtual void initialize(Poco::Util::Application&);
-
-		/// Liberación de recursos
-		virtual void uninitialize();
-
-		/// Obtiene el nombre
-		virtual const char* name() const;
-	};
+		/// Rellena el pie en el diccionario del template
+		void fillFooter(google::TemplateDictionary& dict);
+	}
 }
 
 #endif

@@ -36,6 +36,7 @@
 //=============================================================================
 
 #include "log_req_proc.h"
+#include "template_utils.h"
 #include <fstream>
 #include <sstream>
 #include <port.h> // El orden importa, debe ser anterior a 'template.h'
@@ -43,6 +44,31 @@
 #include <Poco/Net/HTTPServerRequest.h>
 
 using namespace WebInterface;
+
+namespace
+{
+	/// Rellena el diccionario para procesar los templates
+	void fillTemplateDict(google::TemplateDictionary& dict, 
+		const std::string& logData)
+	{
+		// FIXME: Ver como centralizar mejor el manejo de las constantes de
+		// cadena.
+		
+		using Utils::Template::fillFooter;
+		using Utils::Template::fillHeader;
+		using Utils::Template::fillMenu;
+		using Utils::Template::fillPageHeader;
+		
+		// Relleno las distintas partes del template
+		fillHeader(dict, "NGPD::Log");
+		fillPageHeader(dict);
+		fillMenu(dict);
+		fillFooter(dict);
+		
+		// Relleno "a mano" los datos del log
+		dict.SetValue("LOG_DATA", logData);		
+	}
+}
 
 void LogReqProc::process(const Poco::Net::HTTPServerRequest& procReq,
 						 Poco::Net::HTTPServerResponse& resp)
@@ -61,8 +87,8 @@ void LogReqProc::process(const Poco::Net::HTTPServerRequest& procReq,
 	// FIXME: Sacar el path del archivo de log por la configuración, no ponerlo
 	// "hardcoded".
 	// FIXME: Sacar el path de los templates por la configuración, no ponerlo
-	// "hardcoded".
-	// FIXME: Pensar como simplificar la creación de la salida
+	// "hardcoded". Ponerlo en la configuración del subsistema WebServer.
+	// FIXME: Cargar los templates al arrancar el subsistema WebServer.
 
 	// Trato de abrir el archivo
 	ifstream logFile("NGPD.log", ios::in);
@@ -70,6 +96,10 @@ void LogReqProc::process(const Poco::Net::HTTPServerRequest& procReq,
 	// Diccionario
 	TemplateDictionary dict("log");
 
+	// Configuro el directorio raíz
+	Template::SetTemplateRootDirectory("./templates");
+
+	// Me fijo si está abierto el archivo de log
 	if (logFile.is_open())
 	{
 		// Stream para leer el archivo
@@ -77,20 +107,19 @@ void LogReqProc::process(const Poco::Net::HTTPServerRequest& procReq,
 		oss << logFile.rdbuf();
 
 		// Relleno el diccionario
-		dict.SetValue("LOG", oss.str());
+		fillTemplateDict(dict, oss.str());
 	}
 	else
 	{
 		// Relleno el diccionario indicando error
-		dict.SetValue("LOG", "-- ERROR NO SE CARGÓ EL LOG --");
+		fillTemplateDict(dict, "-- ERROR NO SE CARGÓ EL LOG --");
 	}
 
 	// Salida
 	string outStr;
 
 	// Cargo y expando el template
-	Template* pTemplate = Template::GetTemplate("templates/log.tpl", 
-		DO_NOT_STRIP);
+	Template* pTemplate = Template::GetTemplate("log.tpl", DO_NOT_STRIP);
 	pTemplate->Expand(&outStr, &dict);
 
 	// Mando un archivo HTML
