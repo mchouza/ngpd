@@ -36,6 +36,7 @@
 //=============================================================================
 
 #include "static_req_proc.h"
+#include "os_dep.h"
 #include <algorithm>
 #include <fstream>
 
@@ -77,12 +78,15 @@ void StaticReqProc::process(const Poco::Net::HTTPServerRequest& procReq,
 	// FIXME: TEMPORAL!!!
 	// FIXME: FIJARSE SI EL TRUCO DEL rdbuf() SIRVE CON BINARIOS!!!
 	
+	using OSDep::getPath;
+	using OSDep::PATH_APP_DATA;
 	using std::ifstream;
 	using std::ios;
 	using std::string;
 
 	// Trato de abrir el archivo
-	ifstream file(procReq.getURI().c_str(), ios::in|ios::binary);
+	ifstream file((getPath(PATH_APP_DATA) + procReq.getURI()).c_str(),
+		ios::in|ios::binary);
 
 	// Si fallo, listo
 	if (!file.is_open())
@@ -96,7 +100,9 @@ void StaticReqProc::process(const Poco::Net::HTTPServerRequest& procReq,
 	string ext = getFileExtension(procReq.getURI());
 
 	// Me fijo el tipo de archivo por la extensión
-	if (ext == "html" || ext == "htm")
+	if (ext == "css")
+		resp.setContentType("text/css");
+	else if (ext == "html" || ext == "htm")
 		resp.setContentType("text/html");
 	else if (ext == "png")
 		resp.setContentType("image/png");

@@ -50,9 +50,6 @@ namespace Core
 	{
 		/// Servidor web para la interfaz
 		boost::scoped_ptr<WebInterface::WebServer> pWebServer_;
-
-		/// Módulos para realizar operaciones varias
-		boost::scoped_ptr<Core::NGPDModules> pMods_;
 	
 	public:
 		/// Constructor

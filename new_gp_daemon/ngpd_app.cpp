@@ -56,22 +56,23 @@ void NGPDApp::initialize(Poco::Util::Application& self)
 	// Cargo la configuración
 	loadConfiguration();
 
-	// Llamo a la implementación de la clase base
-	ServerApplication::initialize(self);
+	// FIXME: El servidor y los módulos pueden usar sus propios loggers,
+	// conectados a éste
+
+	// FIXME: Ver como hacer aparecer el primer mensaje en el log
 
 	// Indico que estoy inicializando
 	logger().information("Iniciando NGPD (New Genetic Programming Daemon)...");
 
-	// FIXME: El servidor y los módulos pueden usar sus propios loggers,
-	// conectados a éste
-
 	// Cargo los módulos
-	//logger().information("Cargando los módulos...");
-	pMods_.reset(new NGPDModules(config()));
+	addSubsystem(new NGPDModules(*this));
 
 	// Inicio el servidor web
 	//logger().information("Iniciando servidor web...");
 	pWebServer_.reset(new WebInterface::WebServer());
+
+	// Llamo a la implementación de la clase base
+	ServerApplication::initialize(self);
 }
 
 void NGPDApp::uninitialize()

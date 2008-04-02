@@ -30,48 +30,18 @@
 //
 
 //=============================================================================
-// ngpd_modules.h
+// utils_fwd.h
 //-----------------------------------------------------------------------------
-// Creado por Mariano M. Chouza | Empezado el 28 de marzo de 2008
+// Creado por Mariano M. Chouza | Empezado el 1 de abril de 2008
 //=============================================================================
 
-#ifndef NGPD_MODULES_H
-#define NGPD_MODULES_H
+#ifndef UTILS_FWD_H
+#define UTILS_FWD_H
 
-#include <module.h>
-#include <vector>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-#include <Poco/Util/AbstractConfiguration.h>
-#include <Poco/Util/Subsystem.h>
-
-namespace Core
+namespace google
 {
-	/// Contiene los módulos de la aplicación
-	class NGPDModules : public Poco::Util::Subsystem
-	{
-		/// Nombre del subsistema
-		static const char* name_;
-
-		/// Aplicación
-		Poco::Util::Application& app_;
-		
-		/// Módulos cargados
-		std::vector<boost::shared_ptr<Module> > modules_;
-
-	public:
-		/// Constructor
-		NGPDModules(Poco::Util::Application& app);
-
-		/// Inicialización
-		virtual void initialize(Poco::Util::Application&);
-
-		/// Liberación de recursos
-		virtual void uninitialize();
-
-		/// Obtiene el nombre
-		virtual const char* name() const;
-	};
+	// Forwards
+	class TemplateDictionary;
 }
 
 #endif

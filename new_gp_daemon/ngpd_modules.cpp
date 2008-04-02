@@ -46,6 +46,9 @@
 
 using namespace Core;
 
+// Inicializo el nombre
+const char* NGPDModules::name_ = "NGPDModules";
+
 namespace
 {
 	/// Obtiene todos los archivos en un directorio dado
@@ -207,17 +210,35 @@ namespace
 		// Intercambio contenidos
 		modules.swap(cleanVec);
 	}
+
+	/// Muestra los módulos cargados
+	void showLoadedModules(Poco::Logger& logger,
+		const std::vector<boost::shared_ptr<Module> >& modules)
+	{
+		logger.information("Módulos cargados: ");
+		for (size_t i = 0; i < modules.size(); i++)
+			logger.information("\t" + modules[i]->GetName() + " (ID " +
+			modules[i]->GetID().toString() + ")");
+	}
 }
 
-NGPDModules::NGPDModules(const Poco::Util::AbstractConfiguration& config)
+NGPDModules::NGPDModules(Poco::Util::Application& app) :
+app_(app)
+{
+}
+
+void NGPDModules::initialize(Poco::Util::Application&)
 {
 	using OSDep::getPath;
 	using OSDep::PATH_APP_DATA;
 	using std::string;
 
+	// Indico que estoy cargando los módulos
+	app_.logger().information("Cargando los módulos...");
+
 	// Obtengo el path del directorio de los módulos
 	string modulesDirPath = getPath(PATH_APP_DATA) +
-		config.getString("modules.relPath");
+		app_.config().getString("modules.relPath");
 
 	// Cargo los módulos en ese directorio
 	loadModulesAtDir(modules_, modulesDirPath);
@@ -227,4 +248,16 @@ NGPDModules::NGPDModules(const Poco::Util::AbstractConfiguration& config)
 
 	// Limpio el vector de módulos
 	cleanModulesVec(modules_);
+
+	// Indico qué módulos cargué finalmente
+	showLoadedModules(app_.logger(), modules_);
+}
+
+void NGPDModules::uninitialize()
+{
+}
+
+const char* NGPDModules::name() const
+{
+	return name_;
 }

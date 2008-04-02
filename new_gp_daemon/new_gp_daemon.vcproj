@@ -343,6 +343,30 @@
 				>
 			</Filter>
 		</Filter>
+		<Filter
+			Name="Utils"
+			>
+			<Filter
+				Name="Header Files"
+				>
+				<File
+					RelativePath=".\template_utils.h"
+					>
+				</File>
+				<File
+					RelativePath=".\utils_fwd.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Source Files"
+				>
+				<File
+					RelativePath=".\template_utils.cpp"
+					>
+				</File>
+			</Filter>
+		</Filter>
 		<File
 			RelativePath=".\main.cpp"
 			>
