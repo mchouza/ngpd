@@ -47,7 +47,7 @@ void fillHeader(google::TemplateDictionary& dict, const std::string& pageTitle)
 	
 	TemplateDictionary* pHeaderDict = dict.AddIncludeDictionary("HEADER");
 	pHeaderDict->SetFilename("header.tpl");
-
+	pHeaderDict->SetValue("TITLE", pageTitle);
 }
 
 void fillPageHeader(google::TemplateDictionary& dict)
