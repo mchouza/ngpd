@@ -30,51 +30,37 @@
 //
 
 //=============================================================================
-// ngpd_modules.h
+// ngpd_job_manager.cpp
 //-----------------------------------------------------------------------------
-// Creado por Mariano M. Chouza | Empezado el 28 de marzo de 2008
+// Creado por Mariano M. Chouza | Empezado el 3 de abril de 2008
 //=============================================================================
 
-#ifndef NGPD_MODULES_H
-#define NGPD_MODULES_H
+#include "ngpd_job_manager.h"
 
-#include <module.h>
-#include <vector>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-#include <Poco/Util/AbstractConfiguration.h>
-#include <Poco/Util/Subsystem.h>
+using namespace Core;
 
-namespace Core
+// Inicializo el nombre
+const char* NGPDJobManager::name_ = "NGPDJobManager";
+
+NGPDJobManager::NGPDJobManager(Poco::Util::Application& app) : app_(app)
 {
-	/// Contiene los módulos de la aplicación
-	class NGPDModules : public Poco::Util::Subsystem
-	{
-		/// Nombre del subsistema
-		static const char* name_;
-
-		/// Aplicación
-		Poco::Util::Application& app_;
-		
-		/// Módulos cargados
-		std::vector<boost::shared_ptr<Module> > modules_;
-
-	public:
-		/// Constructor
-		NGPDModules(Poco::Util::Application& app);
-
-		/// Destructor
-		virtual ~NGPDModules();
-
-		/// Inicialización
-		virtual void initialize(Poco::Util::Application&);
-
-		/// Liberación de recursos
-		virtual void uninitialize();
-
-		/// Obtiene el nombre
-		virtual const char* name() const;
-	};
 }
 
-#endif
+NGPDJobManager::~NGPDJobManager()
+{
+}
+
+void NGPDJobManager::initialize(Poco::Util::Application&)
+{
+	// FIXME: Inicializar!!
+}
+
+void NGPDJobManager::uninitialize()
+{
+	// FIXME: Liberar recursos!!
+}
+
+const char* NGPDJobManager::name() const
+{
+	return name_;
+}

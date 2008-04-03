@@ -106,6 +106,8 @@ void StaticReqProc::process(const Poco::Net::HTTPServerRequest& procReq,
 		resp.setContentType("text/html");
 	else if (ext == "png")
 		resp.setContentType("image/png");
+	else if (ext == "js")
+		resp.setContentType("text/ecmascript");
 	else
 		resp.setContentType("application/octet-stream");
 

@@ -53,11 +53,10 @@ NGPDApp::~NGPDApp()
 
 void NGPDApp::initialize(Poco::Util::Application& self)
 {
+	using WebInterface::WebServer;
+	
 	// Cargo la configuración
 	loadConfiguration();
-
-	// FIXME: El servidor y los módulos pueden usar sus propios loggers,
-	// conectados a éste
 
 	// FIXME: Ver como hacer aparecer el primer mensaje en el log
 
@@ -68,8 +67,7 @@ void NGPDApp::initialize(Poco::Util::Application& self)
 	addSubsystem(new NGPDModules(*this));
 
 	// Inicio el servidor web
-	//logger().information("Iniciando servidor web...");
-	pWebServer_.reset(new WebInterface::WebServer());
+	addSubsystem(new WebServer(*this));
 
 	// Llamo a la implementación de la clase base
 	ServerApplication::initialize(self);

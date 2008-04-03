@@ -218,6 +218,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\template_strings.h"
+					>
+				</File>
+				<File
 					RelativePath=".\web_interface_fwd.h"
 					>
 				</File>
@@ -276,6 +280,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ngpd_job_manager.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\ngpd_modules.cpp"
 					>
 				</File>
@@ -295,6 +303,10 @@
 				</File>
 				<File
 					RelativePath=".\ngpd_app.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ngpd_job_manager.h"
 					>
 				</File>
 				<File

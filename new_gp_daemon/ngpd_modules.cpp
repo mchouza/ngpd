@@ -104,6 +104,8 @@ namespace
 	void loadModulesAtDir(std::vector<boost::shared_ptr<Module> >& modules,
 		const std::string& dirPath)
 	{
+		using OSDep::disableErrorDialogs;
+		using OSDep::enableErrorDialogs;
 		using Poco::Util::Application;
 		using std::string;
 		using std::vector;
@@ -111,9 +113,24 @@ namespace
 		// Obtengo primero todos los archivos que estén en el directorio
 		vector<string> filesInDir = getAllFilesInDir(dirPath);
 
+		// Desactivo los dialogs de error del sistema
+		disableErrorDialogs();
+
 		// Cargo todos los módulos
 		for (size_t i = 0; i < filesInDir.size(); i++)
-			loadModule(modules, filesInDir[i]);
+		{
+			// Soy muy tolerante con las excepciones al tratar de cargar
+			try
+			{
+				loadModule(modules, filesInDir[i]);
+			}
+			catch (...)
+			{
+			}
+		}
+
+		// Vuelvo a activar los dialogs de error del sistema
+		enableErrorDialogs();
 	}
 
 	/// Trata de cumplir con las dependencias de todos los módulos. En caso de
@@ -224,6 +241,10 @@ namespace
 
 NGPDModules::NGPDModules(Poco::Util::Application& app) :
 app_(app)
+{
+}
+
+NGPDModules::~NGPDModules()
 {
 }
 

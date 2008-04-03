@@ -47,7 +47,7 @@ namespace Utils
 	{
 		/// Rellena el header en el diccionario del template
 		void fillHeader(google::TemplateDictionary& dict, 
-			const std::string& pageTitle);
+			const std::string& pageTitle, const std::string& scriptSrc = "");
 
 		/// Rellena el header de la página en el diccionario del template
 		void fillPageHeader(google::TemplateDictionary& dict);

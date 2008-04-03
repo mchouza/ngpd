@@ -36,9 +36,80 @@
 //=============================================================================
 
 #include "config_data_req_proc.h"
+#include "log_req_proc.h"
+#include "template_utils.h"
+#include <port.h> // El orden importa, debe ser anterior a 'template.h'
+#include <google/template.h>
+#include <Poco/Net/HTTPServerRequest.h>
 #include <Poco/Util/Application.h>
 
 using namespace WebInterface;
+
+namespace
+{
+	/// Rellena el diccionario de las templates con los parámetros de 
+	/// configuración
+	void fillTemplateDict(google::TemplateDictionary& dict)
+	{
+		using Utils::Template::fillFooter;
+		using Utils::Template::fillHeader;
+		using Utils::Template::fillMenu;
+		using Utils::Template::fillPageHeader;
+		
+		// FIXME: Poner el path del script de config desde la config :-)
+
+		// Relleno las distintas partes del template
+		// FIXME: Indicar el prefix en el título...
+		fillHeader(dict, "NGPD::Config", "/static/config.js"); 
+		fillPageHeader(dict);
+		fillMenu(dict);
+		fillFooter(dict);
+	}
+}
+
+void ConfigDataReqProc::process(const Poco::Net::HTTPServerRequest& procReq,
+								Poco::Net::HTTPServerResponse& resp)
+{
+	using google::DO_NOT_STRIP;
+	using google::Template;
+	using google::TemplateDictionary;
+	using google::TemplateString;
+	using std::ifstream;
+	using std::ios;
+	using std::ostringstream;
+	using std::string;
+	using std::vector;
+	
+	// FIXME: Manejar errores en el pedido
+	// FIXME: Sacar el path de los templates por la configuración, no ponerlo
+	// "hardcoded". Ponerlo en la configuración del subsistema WebServer.
+	// FIXME: Cargar los templates al arrancar el subsistema WebServer.
+
+	// Diccionario
+	TemplateDictionary dict("config");
+
+	// Configuro el directorio raíz
+	Template::SetTemplateRootDirectory("./templates");
+
+	// Relleno el diccionario
+	fillTemplateDict(dict);
+
+	// Salida
+	string outStr;
+
+	// Cargo y expando el template
+	Template* pTemplate = Template::GetTemplate("config.tpl", DO_NOT_STRIP);
+	pTemplate->Expand(&outStr, &dict);
+
+	// Mando un archivo HTML
+	resp.setContentType("text/html");
+
+	// Copio el template expandido a la salida
+	resp.send() << outStr;
+}
+
+// FIXME: Eliminar una vez que funcione la alternativa
+#if 0
 
 namespace
 {
@@ -76,3 +147,5 @@ void ConfigDataReqProc::process(const Poco::Net::HTTPServerRequest& procReq,
 	r << "<h1>Variables</h1>";
 	recPrint(r, c);
 }
+
+#endif

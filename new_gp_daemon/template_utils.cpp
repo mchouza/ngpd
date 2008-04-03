@@ -41,13 +41,24 @@
 
 namespace Utils { namespace Template {
 
-void fillHeader(google::TemplateDictionary& dict, const std::string& pageTitle)
+// FIXME: Usar strings predefinidas!!!
+
+void fillHeader(google::TemplateDictionary& dict, const std::string& pageTitle,
+				const std::string& scriptSrc)
 {
 	using google::TemplateDictionary;
 	
 	TemplateDictionary* pHeaderDict = dict.AddIncludeDictionary("HEADER");
 	pHeaderDict->SetFilename("header.tpl");
 	pHeaderDict->SetValue("TITLE", pageTitle);
+
+	// Si me indican que va con un script, lo agrego
+	if (!scriptSrc.empty())
+	{
+		// Agrego el valor y muestro la sección
+		pHeaderDict->SetValueAndShowSection("SCRIPT_SRC", scriptSrc,
+			"SCRIPT_SEC");
+	}
 }
 
 void fillPageHeader(google::TemplateDictionary& dict)
