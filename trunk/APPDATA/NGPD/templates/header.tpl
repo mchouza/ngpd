@@ -7,4 +7,7 @@
 	<style type="text/css">
 		@import "/static/base_layout.css";
 	</style>
+	{{#SCRIPT_SEC}}
+	<script type="text/ecmascript" src="{{SCRIPT_SRC}}" />
+	{{/SCRIPT_SEC}}
 </head>

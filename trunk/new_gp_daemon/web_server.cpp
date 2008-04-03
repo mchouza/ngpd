@@ -38,20 +38,54 @@
 #include "web_server.h"
 #include "req_handler_factory.h"
 #include <Poco/Net/HTTPServerParams.h>
+#include <Poco/Util/Application.h>
 
 using namespace WebInterface;
 
-WebServer::WebServer() :
-srvSocket_(1234), // FIXME: Hacer configurable
-server_(new WebInterface::ReqHandlerFactory(), srvSocket_, 
-		new Poco::Net::HTTPServerParams())
+// Inicializo el nombre
+const char* WebServer::name_ = "WebServer";
+
+WebServer::WebServer(Poco::Util::Application& app) :
+app_(app)
 {
-	// Arranco el servidor
-	server_.start();
 }
 
 WebServer::~WebServer()
 {
-	// Detengo el servidor
-	server_.stop();
+}
+
+void WebServer::initialize(Poco::Util::Application&)
+{
+	// Indico que estoy cargando los módulos
+	app_.logger().information("Iniciando servidor web...");
+	
+	// Creo el "server socket"
+	// FIXME: Hacer configurable
+	pSrvSocket_.reset(new Poco::Net::ServerSocket(1234));
+
+	// Creo al servidor HTTP
+	pServer_.reset(new Poco::Net::HTTPServer(
+		new WebInterface::ReqHandlerFactory(), 
+		*pSrvSocket_, 
+		new Poco::Net::HTTPServerParams()));
+	
+	// Arranco el servidor HTTP
+	pServer_->start();
+}
+
+void WebServer::uninitialize()
+{
+	// Detengo el servidor HTTP
+	pServer_->stop();
+
+	// Destruyo al servidor HTTP
+	pServer_.reset();
+
+	// Destruyo al "server socket"
+	pSrvSocket_.reset();
+}
+
+const char* WebServer::name() const
+{
+	return name_;
 }

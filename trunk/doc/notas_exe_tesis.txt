@@ -1,19 +1,21 @@
 OBJETIVOS (con tiempos)
 =======================
-
-- Agregar al JobManager como subsistema. [Jueves 3/4]
-- Revisar puntos pendientes. [Jueves 3/4]
-- Hacer un template que permita editar valores y que los mande modificados en un POST. [Jueves 3/4]
-- Arreglar el sistema de logging. [Jueves 3/4]
+- Revisar puntos pendientes. [Jueves 3/4] (no llegué...) [Viernes 3/4]
+- Arreglar el sistema de logging. [Jueves 3/4] (no llegué...) [Viernes 3/4]
 - Corriendo trabajos ingresados por la interfaz (dividir en subtrabajos). [Hasta el Lunes 7/4]
 
-OBJETIVOS CUMPLIDOS
-===================
+OBJETIVOS CUMPLIDOS (revisar partes no cumplidas)
+=================================================
+- Hacer un template que permita editar valores y que los mande modificados en un POST. [Jueves 3/4] (casi listo)
+- Agregar al JobManager como subsistema. [Jueves 3/4]
 - Integrar con CTemplate (ver prueba en el Sandbox). [Lunes 31/3] (Empezado el 31/3, terminado el 1/4. Falta solo mejorar la integración.)
 - Agregar a Modules como subsistema. [Miércoles 2/4] (Hecho el 1/4, falta ver mejor el tema del logger).
 - Tener funcionando un daemon con server y templates HTML. [Martes 25/3] (Faltan las templates).
-- Cargar módulos en base al XML. [Miércoles 26/3] (No realmente, abandoné el XML y voy a cargar en base al .properties)
 - Conectar configuración con la interfaz web. Agregar transaccionalidad al manejo de archivos. [Jueves 27/3] (Terminado parcialmente, no hay escritura ni transaccionalidad. Funcionalidad básica de despliegue demostrada.)
+
+OBJETIVOS TOTALMENTE CUMPLIDOS Y/O ELIMINADOS
+=============================================
+- Cargar módulos en base al XML. [Miércoles 26/3] (No realmente, abandoné el XML y voy a cargar en base al .properties)
 
 FEATURES
 ========

@@ -38,25 +38,42 @@
 #ifndef WEB_SERVER_H
 #define WEB_SERVER_H
 
+#include <boost/scoped_ptr.hpp>
 #include <Poco/Net/HTTPServer.h>
+#include <Poco/Util/Subsystem.h>
 
 namespace WebInterface
 {
 	/// Servidor web que presenta una interfaz para el daemon
-	class WebServer
+	class WebServer : public Poco::Util::Subsystem
 	{
+		/// Aplicación
+		Poco::Util::Application& app_;
+		
 		/// Socket con el que escucha el servidor
-		Poco::Net::ServerSocket srvSocket_;
+		boost::scoped_ptr<Poco::Net::ServerSocket> pSrvSocket_;
 	
 		/// Servidor HTTP
-		Poco::Net::HTTPServer server_;
+		boost::scoped_ptr<Poco::Net::HTTPServer> pServer_;
+
+		/// Nombre
+		static const char* name_;
 
 	public:
 		/// Constructor
-		WebServer();
+		WebServer(Poco::Util::Application& app);
 
 		/// Destructor
 		virtual ~WebServer();
+
+		/// Inicialización
+		virtual void initialize(Poco::Util::Application&);
+
+		/// Liberación de recursos
+		virtual void uninitialize();
+
+		/// Obtiene el nombre
+		virtual const char* name() const;
 	};
 }
 

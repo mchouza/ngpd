@@ -35,6 +35,8 @@
 // Creado por Mariano M. Chouza | Empezado el 27 de marzo de 2008
 //=============================================================================
 
+// FIXME: Evaluar utilidad
+
 #ifndef NGPD_TASK_MGR_H
 #define NGPD_TASK_MGR_H
 
