@@ -39,6 +39,7 @@
 #define WEB_SERVER_H
 
 #include <boost/scoped_ptr.hpp>
+#include <Poco/Logger.h>
 #include <Poco/Net/HTTPServer.h>
 #include <Poco/Util/Subsystem.h>
 
@@ -55,6 +56,9 @@ namespace WebInterface
 	
 		/// Servidor HTTP
 		boost::scoped_ptr<Poco::Net::HTTPServer> pServer_;
+
+		/// Logger
+		Poco::Logger& logger_;
 
 		/// Nombre
 		static const char* name_;

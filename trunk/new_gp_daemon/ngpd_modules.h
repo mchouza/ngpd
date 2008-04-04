@@ -41,7 +41,7 @@
 #include <module.h>
 #include <vector>
 #include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
+#include <Poco/Logger.h>
 #include <Poco/Util/AbstractConfiguration.h>
 #include <Poco/Util/Subsystem.h>
 
@@ -58,6 +58,9 @@ namespace Core
 		
 		/// Módulos cargados
 		std::vector<boost::shared_ptr<Module> > modules_;
+
+		/// Logger
+		Poco::Logger& logger_;
 
 	public:
 		/// Constructor

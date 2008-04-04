@@ -232,15 +232,16 @@ namespace
 	void showLoadedModules(Poco::Logger& logger,
 		const std::vector<boost::shared_ptr<Module> >& modules)
 	{
-		logger.information("Módulos cargados: ");
+		logger.information("Carga de módulos terminada. Módulos cargados: ");
 		for (size_t i = 0; i < modules.size(); i++)
-			logger.information("\t" + modules[i]->GetName() + " (ID " +
+			logger.information("    " + modules[i]->GetName() + " (ID " +
 			modules[i]->GetID().toString() + ")");
 	}
 }
 
 NGPDModules::NGPDModules(Poco::Util::Application& app) :
-app_(app)
+app_(app),
+logger_(Poco::Logger::get("Modules"))
 {
 }
 
@@ -255,7 +256,7 @@ void NGPDModules::initialize(Poco::Util::Application&)
 	using std::string;
 
 	// Indico que estoy cargando los módulos
-	app_.logger().information("Cargando los módulos...");
+	logger_.information("Cargando los módulos...");
 
 	// Obtengo el path del directorio de los módulos
 	string modulesDirPath = getPath(PATH_APP_DATA) +
@@ -271,7 +272,7 @@ void NGPDModules::initialize(Poco::Util::Application&)
 	cleanModulesVec(modules_);
 
 	// Indico qué módulos cargué finalmente
-	showLoadedModules(app_.logger(), modules_);
+	showLoadedModules(logger_, modules_);
 }
 
 void NGPDModules::uninitialize()
