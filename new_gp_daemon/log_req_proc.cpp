@@ -41,6 +41,9 @@
 #include <sstream>
 #include <port.h> // El orden importa, debe ser anterior a 'template.h'
 #include <google/template.h>
+#include <Poco/StreamConverter.h>
+#include <Poco/UTF8Encoding.h>
+#include <Poco/Windows1252Encoding.h>
 #include <Poco/Net/HTTPServerRequest.h>
 
 using namespace WebInterface;
@@ -77,6 +80,9 @@ void LogReqProc::process(const Poco::Net::HTTPServerRequest& procReq,
 	using google::Template;
 	using google::TemplateDictionary;
 	using google::TemplateString;
+	using Poco::OutputStreamConverter;
+	using Poco::UTF8Encoding;
+	using Poco::Windows1252Encoding;
 	using std::ifstream;
 	using std::ios;
 	using std::ostringstream;
@@ -126,5 +132,6 @@ void LogReqProc::process(const Poco::Net::HTTPServerRequest& procReq,
 	resp.setContentType("text/html");
 
 	// Copio el template expandido a la salida
-	resp.send() << outStr;
+	OutputStreamConverter(resp.send(), Windows1252Encoding(), 
+		UTF8Encoding()) << outStr;
 }

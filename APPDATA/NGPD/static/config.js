@@ -38,9 +38,6 @@
 // Cantidad de edits que están abiertas
 var editsPending = 0;
 
-// Nombres de variables
-var varNames = ['var1', 'var2', 'var3'];
-
 // Cambio la cantidad de edits pendientes
 function changeEditsPending(delta)
 {
@@ -134,12 +131,18 @@ function cancelEditVar(varName)
 // Cancela todas las ediciones que se estén realizando
 function cancelAllEditVars()
 {
-	// Cancelo todas las ediciones posibles.
-	for (var i in varNames)
+	// Obtengo todas las inputs
+	inputs = document.getElementsByTagName('input');
+	for (var i = 0; i < inputs.length; i++)
 	{
-		cancelEditVar(varNames[i]);
+		// Si es un 'text', corresponde a una variable en edición
+		if (inputs[i].getAttribute('type') == 'text')
+		{
+			// Cancelo la edición
+			cancelEditVar(inputs[i].getAttribute('id'));
+			
+			// Como los números bajan en uno, el índice lo hace también
+			i--;
+		}
 	}
-	
-	// Marco lo que hice
-	changeEditsPending(-editsPending);
 }

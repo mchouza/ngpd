@@ -38,6 +38,7 @@
 #include "config_data_req_proc.h"
 #include "log_req_proc.h"
 #include "template_utils.h"
+#include <sstream>
 #include <port.h> // El orden importa, debe ser anterior a 'template.h'
 #include <google/template.h>
 #include <Poco/Net/HTTPServerRequest.h>
@@ -47,6 +48,29 @@ using namespace WebInterface;
 
 namespace
 {
+	// FIXME: Hacer que funcione con lso datos de config
+	/// Rellena los parámetros de la configuración
+	void fillConfig(google::TemplateDictionary& dict)
+	{
+		using google::TemplateDictionary;
+		using std::ostringstream;
+		
+		// Para cada variable
+		for (int i = 0; i < 10; i++)
+		{
+			// Para armar el nombre de variable
+			ostringstream oss;
+			
+			// Agrego un diccionario de sección
+			TemplateDictionary* pSD = dict.AddSectionDictionary("VAR_SEC");
+
+			// Le agrego la variable
+			oss << "Var" << i;
+			pSD->SetValue("VAR_NAME", oss.str());
+			pSD->SetIntValue("VAR_VALUE", i + 2);
+		}
+	}
+	
 	/// Rellena el diccionario de las templates con los parámetros de 
 	/// configuración
 	void fillTemplateDict(google::TemplateDictionary& dict)
@@ -64,6 +88,7 @@ namespace
 		fillPageHeader(dict);
 		fillMenu(dict);
 		fillFooter(dict);
+		fillConfig(dict);
 	}
 }
 
