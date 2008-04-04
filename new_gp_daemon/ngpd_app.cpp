@@ -58,10 +58,8 @@ void NGPDApp::initialize(Poco::Util::Application& self)
 	// Cargo la configuración
 	loadConfiguration();
 
-	// FIXME: Ver como hacer aparecer el primer mensaje en el log
-
-	// Indico que estoy inicializando
-	logger().information("Iniciando NGPD (New Genetic Programming Daemon)...");
+	// LP FIXME: Ver como hacer aparecer el primer mensaje en el log.
+	// En todo caso, agregarlo "a mano".
 
 	// Cargo los módulos
 	addSubsystem(new NGPDModules(*this));

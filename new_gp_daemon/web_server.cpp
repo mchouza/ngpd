@@ -46,7 +46,8 @@ using namespace WebInterface;
 const char* WebServer::name_ = "WebServer";
 
 WebServer::WebServer(Poco::Util::Application& app) :
-app_(app)
+app_(app),
+logger_(Poco::Logger::get("WebServer"))
 {
 }
 
@@ -57,7 +58,7 @@ WebServer::~WebServer()
 void WebServer::initialize(Poco::Util::Application&)
 {
 	// Indico que estoy cargando los módulos
-	app_.logger().information("Iniciando servidor web...");
+	logger_.information("Iniciando servidor web...");
 	
 	// Creo el "server socket"
 	// FIXME: Hacer configurable
@@ -71,6 +72,9 @@ void WebServer::initialize(Poco::Util::Application&)
 	
 	// Arranco el servidor HTTP
 	pServer_->start();
+
+	// Indico que el servidor web está iniciado
+	logger_.information("Servidor web iniciado.");
 }
 
 void WebServer::uninitialize()
