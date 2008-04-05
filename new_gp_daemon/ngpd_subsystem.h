@@ -30,49 +30,49 @@
 //
 
 //=============================================================================
-// ngpd_app.h
+// ngpd_subsystem.h
 //-----------------------------------------------------------------------------
-// Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
+// Creado por Mariano M. Chouza | Empezado el 5 de abril de 2008
 //=============================================================================
 
-#ifndef NGPD_APP_H
-#define NGPD_APP_H
+#ifndef NGPD_SUBSYSTEM_H
+#define NGPD_SUBSYSTEM_H
 
-#include "core_fwd.h"
-#include "web_interface_fwd.h"
-#include <boost/scoped_ptr.hpp>
-#include <Poco/Util/ServerApplication.h>
+#include <Poco/Logger.h>
+#include <Poco/Util/AbstractConfiguration.h>
+#include <Poco/Util/Subsystem.h>
 
 namespace Core
 {
-	/// Clase de la aplicación servidor
-	class NGPDApp : public Poco::Util::ServerApplication
+	/// Subsistema de la aplicación NGPD
+	class NGPDSubsystem : public Poco::Util::Subsystem
 	{
-		/// Servidor web para la interfaz
-		boost::scoped_ptr<WebInterface::WebServer> pWebServer_;
-	
+		/// Aplicación
+		Poco::Util::Application& app_;
+
 	public:
 		/// Constructor
-		NGPDApp();
+		NGPDSubsystem(Poco::Util::Application& app,
+			const std::string& name);
 
 		/// Destructor
-		virtual ~NGPDApp();
+		virtual ~NGPDSubsystem();
+
+		/// Inicialización
+		virtual void initialize(Poco::Util::Application&) = 0;
+
+		/// Liberación de recursos
+		virtual void uninitialize() = 0;
+
+		/// Obtiene el nombre
+		virtual const char* name() const = 0;
 
 	protected:
-		/// Maneja la inicialización
-		virtual void initialize(Poco::Util::Application& self);
+		/// Configuración "propia"
+		const Poco::Util::AbstractConfiguration& config_;
 
-		/// Maneja la liberación de recursos
-		virtual void uninitialize();
-
-		/// Carga la configuración (pisa al método de la clase base)
-		int loadConfiguration(int priority = PRIO_DEFAULT);
-
-		/// Método que realiza el trabajo
-		virtual int main(const std::vector<std::string>& args);
-
-		/// Agrega un subsistema
-		void addSubsystem(NGPDSubsystem* pSubsystem);
+		/// Log "propio"
+		Poco::Logger& logger_;
 	};
 }
 

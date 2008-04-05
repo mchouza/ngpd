@@ -46,8 +46,7 @@ using namespace WebInterface;
 const char* WebServer::name_ = "WebServer";
 
 WebServer::WebServer(Poco::Util::Application& app) :
-app_(app),
-logger_(Poco::Logger::get("WebServer"))
+NGPDSubsystem(app, name_)
 {
 }
 

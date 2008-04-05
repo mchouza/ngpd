@@ -36,6 +36,7 @@
 //=============================================================================
 
 #include "ngpd_app.h"
+#include "ngpd_job_manager.h"
 #include "ngpd_modules.h"
 #include "os_dep.h"
 #include "web_server.h"
@@ -63,6 +64,9 @@ void NGPDApp::initialize(Poco::Util::Application& self)
 
 	// Cargo los módulos
 	addSubsystem(new NGPDModules(*this));
+
+	// Inicio a los trabajos
+	addSubsystem(new NGPDJobManager(*this));
 
 	// Inicio el servidor web
 	addSubsystem(new WebServer(*this));
@@ -115,4 +119,10 @@ int NGPDApp::main(const std::vector<std::string>& args)
 
 	// Terminé OK
 	return EXIT_OK;
+}
+
+void NGPDApp::addSubsystem(NGPDSubsystem *pSubsystem)
+{
+	// Llamo a la implementación de la clase base
+	Application::addSubsystem(pSubsystem);
 }

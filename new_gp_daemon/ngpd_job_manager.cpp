@@ -42,7 +42,8 @@ using namespace Core;
 // Inicializo el nombre
 const char* NGPDJobManager::name_ = "NGPDJobManager";
 
-NGPDJobManager::NGPDJobManager(Poco::Util::Application& app) : app_(app)
+NGPDJobManager::NGPDJobManager(Poco::Util::Application& app) :
+NGPDSubsystem(app, name_)
 {
 }
 
@@ -52,7 +53,14 @@ NGPDJobManager::~NGPDJobManager()
 
 void NGPDJobManager::initialize(Poco::Util::Application&)
 {
-	// FIXME: Inicializar!!
+	// Indico que estoy cargando los trabajos
+	logger_.information("Cargando los trabajos...");
+
+	// Realizo la carga de trabajos
+	loadJobsAtDir("");
+
+	// Indico que terminé de cargar los trabajos
+	logger_.information("Carga de trabajos finalizada.");
 }
 
 void NGPDJobManager::uninitialize()
@@ -63,4 +71,9 @@ void NGPDJobManager::uninitialize()
 const char* NGPDJobManager::name() const
 {
 	return name_;
+}
+
+void NGPDJobManager::loadJobsAtDir(const std::string& path)
+{
+	// FIXME: Hacer que cargue a los trabajos
 }

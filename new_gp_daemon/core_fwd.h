@@ -41,7 +41,7 @@
 namespace Core
 {
 	// Forwards
-	class NGPDModules;
+	class NGPDSubsystem;
 }
 
 #endif

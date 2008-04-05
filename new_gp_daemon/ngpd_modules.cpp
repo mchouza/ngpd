@@ -106,7 +106,6 @@ namespace
 	{
 		using OSDep::disableErrorDialogs;
 		using OSDep::enableErrorDialogs;
-		using Poco::Util::Application;
 		using std::string;
 		using std::vector;
 
@@ -240,8 +239,7 @@ namespace
 }
 
 NGPDModules::NGPDModules(Poco::Util::Application& app) :
-app_(app),
-logger_(Poco::Logger::get("Modules"))
+NGPDSubsystem(app, name_)
 {
 }
 
@@ -251,16 +249,13 @@ NGPDModules::~NGPDModules()
 
 void NGPDModules::initialize(Poco::Util::Application&)
 {
-	using OSDep::getPath;
-	using OSDep::PATH_APP_DATA;
 	using std::string;
 
 	// Indico que estoy cargando los módulos
 	logger_.information("Cargando los módulos...");
 
 	// Obtengo el path del directorio de los módulos
-	string modulesDirPath = getPath(PATH_APP_DATA) +
-		app_.config().getString("modules.relPath");
+	string modulesDirPath = config_.getString("modules.relPath");
 
 	// Cargo los módulos en ese directorio
 	loadModulesAtDir(modules_, modulesDirPath);
