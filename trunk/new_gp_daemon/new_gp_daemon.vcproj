@@ -288,7 +288,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\ngpd_task_mgr.cpp"
+					RelativePath=".\ngpd_subsystem.cpp"
 					>
 				</File>
 			</Filter>
@@ -314,7 +314,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\ngpd_task_mgr.h"
+					RelativePath=".\ngpd_subsystem.h"
 					>
 				</File>
 			</Filter>

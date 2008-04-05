@@ -38,16 +38,14 @@
 #ifndef NGPD_JOB_MANAGER_H
 #define NGPD_JOB_MANAGER_H
 
-#include <Poco/Util/Subsystem.h>
+
+#include "ngpd_subsystem.h"
 
 namespace Core
 {
 	/// Se encarga de administrar el procesamiento de los trabajos de diseño
-	class NGPDJobManager : public Poco::Util::Subsystem
+	class NGPDJobManager : public NGPDSubsystem
 	{
-		/// Aplicación
-		Poco::Util::Application& app_;
-
 		/// Nombre
 		static const char* name_;
 
@@ -66,6 +64,10 @@ namespace Core
 
 		/// Obtiene el nombre
 		virtual const char* name() const;
+
+	private:
+		/// Carga los trabajos
+		void loadJobsAtDir(const std::string& path);
 	};
 }
 

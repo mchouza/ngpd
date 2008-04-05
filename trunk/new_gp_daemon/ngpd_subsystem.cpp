@@ -30,50 +30,24 @@
 //
 
 //=============================================================================
-// ngpd_app.h
+// ngpd_subsystem.cpp
 //-----------------------------------------------------------------------------
-// Creado por Mariano M. Chouza | Empezado el 25 de marzo de 2008
+// Creado por Mariano M. Chouza | Empezado el 5 de abril de 2008
 //=============================================================================
 
-#ifndef NGPD_APP_H
-#define NGPD_APP_H
+#include "ngpd_subsystem.h"
+#include <Poco/Util/Application.h>
 
-#include "core_fwd.h"
-#include "web_interface_fwd.h"
-#include <boost/scoped_ptr.hpp>
-#include <Poco/Util/ServerApplication.h>
+using namespace Core;
 
-namespace Core
+NGPDSubsystem::NGPDSubsystem(Poco::Util::Application& app, 
+							 const std::string& name) :
+app_(app),
+config_(*app.config().createView(name)),
+logger_(Poco::Logger::get(name))
 {
-	/// Clase de la aplicación servidor
-	class NGPDApp : public Poco::Util::ServerApplication
-	{
-		/// Servidor web para la interfaz
-		boost::scoped_ptr<WebInterface::WebServer> pWebServer_;
-	
-	public:
-		/// Constructor
-		NGPDApp();
-
-		/// Destructor
-		virtual ~NGPDApp();
-
-	protected:
-		/// Maneja la inicialización
-		virtual void initialize(Poco::Util::Application& self);
-
-		/// Maneja la liberación de recursos
-		virtual void uninitialize();
-
-		/// Carga la configuración (pisa al método de la clase base)
-		int loadConfiguration(int priority = PRIO_DEFAULT);
-
-		/// Método que realiza el trabajo
-		virtual int main(const std::vector<std::string>& args);
-
-		/// Agrega un subsistema
-		void addSubsystem(NGPDSubsystem* pSubsystem);
-	};
 }
 
-#endif
+NGPDSubsystem::~NGPDSubsystem()
+{
+}

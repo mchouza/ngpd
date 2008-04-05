@@ -38,30 +38,24 @@
 #ifndef WEB_SERVER_H
 #define WEB_SERVER_H
 
+#include "ngpd_subsystem.h"
 #include <boost/scoped_ptr.hpp>
 #include <Poco/Logger.h>
 #include <Poco/Net/HTTPServer.h>
-#include <Poco/Util/Subsystem.h>
 
 namespace WebInterface
 {
 	/// Servidor web que presenta una interfaz para el daemon
-	class WebServer : public Poco::Util::Subsystem
+	class WebServer : public Core::NGPDSubsystem
 	{
-		/// Aplicación
-		Poco::Util::Application& app_;
-		
+		/// Nombre
+		static const char* name_;
+
 		/// Socket con el que escucha el servidor
 		boost::scoped_ptr<Poco::Net::ServerSocket> pSrvSocket_;
 	
 		/// Servidor HTTP
 		boost::scoped_ptr<Poco::Net::HTTPServer> pServer_;
-
-		/// Logger
-		Poco::Logger& logger_;
-
-		/// Nombre
-		static const char* name_;
 
 	public:
 		/// Constructor
