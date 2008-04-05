@@ -110,7 +110,10 @@ void LogReqProc::process(const Poco::Net::HTTPServerRequest& procReq,
 	{
 		// Stream para leer el archivo
 		ostringstream oss;
-		oss << logFile.rdbuf();
+
+		// Covierto el log a UTF-8
+		OutputStreamConverter(oss, Windows1252Encoding(),
+			UTF8Encoding()) << logFile.rdbuf();
 
 		// Relleno el diccionario
 		fillTemplateDict(dict, oss.str());
@@ -132,6 +135,5 @@ void LogReqProc::process(const Poco::Net::HTTPServerRequest& procReq,
 	resp.setContentType("text/html");
 
 	// Copio el template expandido a la salida
-	OutputStreamConverter(resp.send(), Windows1252Encoding(), 
-		UTF8Encoding()) << outStr;
+	resp.send() << outStr;
 }
