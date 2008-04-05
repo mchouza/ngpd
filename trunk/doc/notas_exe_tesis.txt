@@ -2,7 +2,6 @@ OBJETIVOS (con tiempos)
 =======================
 - Agregar editor de trabajos. [Lunes 7/4]
 - Hacer que JobManager efectivamente maneje trabajos. [Sábado 5/4 - PREVIEW SIMILAR A GPCP]
-- Arreglar el sistema de logging. [Jueves 3/4] (no llegué...) [Viernes 4/4]
 - Corriendo trabajos ingresados por la interfaz (dividir en subtrabajos). [Hasta el Lunes 7/4]
 
 OBJETIVOS CUMPLIDOS (revisar partes no cumplidas)
@@ -17,6 +16,8 @@ OBJETIVOS CUMPLIDOS (revisar partes no cumplidas)
 
 OBJETIVOS TOTALMENTE CUMPLIDOS Y/O ELIMINADOS
 =============================================
+- Arreglar el sistema de logging. [Jueves 3/4] (no llegué...) [Viernes 4/4]
+- Arreglar bug de aparición de caracteres extraño en 'http://localhost:1234/log/'. [Viernes 5/4 - Sábado 6/4]
 - Cargar módulos en base al XML. [Miércoles 26/3] (No realmente, abandoné el XML y voy a cargar en base al .properties)
 
 FEATURES
