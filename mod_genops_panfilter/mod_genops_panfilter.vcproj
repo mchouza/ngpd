@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="p:\poco\Foundation\include;p:\Thesis\common;p:\boost"
+				AdditionalIncludeDirectories="p:\poco\Foundation\include;p:\boost;..\common"
 				PreprocessorDefinitions="MODULE_EXPORTS;POCO_DLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -119,7 +119,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="p:\poco\Foundation\include;p:\Thesis\common;p:\boost"
+				AdditionalIncludeDirectories="p:\poco\Foundation\include;..\common;p:\boost"
 				PreprocessorDefinitions="MODULE_EXPORTS;POCO_DLL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"

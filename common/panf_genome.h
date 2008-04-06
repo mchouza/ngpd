@@ -30,47 +30,78 @@
 //
 
 //=============================================================================
-// mod_genops_panfilter.h
+// panf_genome.h
 //-----------------------------------------------------------------------------
 // Creado por Mariano M. Chouza | Agregado a NGPD el 6 de abril de 2008
 //=============================================================================
 
-#ifndef MOD_GENOPS_PANFILTER_H
-#define MOD_GENOPS_PANFILTER_H
+#ifndef PANF_GENOME_H
+#define PANF_GENOME_H
 
-#include <ops_module.h>
+// FIXME: Sacar cuando translade lo relacionado con individuos
+#include <boost/graph/adjacency_list.hpp>
 
-/// Clase del módulo encargado de operar con el genoma (mutarlo,
-/// hacer cruzas, etc)
-class MODULE_API ModGenOpsPAnFilter : public OpsModule
+// FIXME: Agregar una descripción de la estructura del genoma
+
+/// Clases de operación
+enum EOpKind
 {
-public:
-	// Requeridos por la interfaz
-	virtual const std::string& GetName() const {return name_;};
-	virtual const Poco::UUID& GetID() const {return id_;}
-	virtual const std::vector<Req>& GetReqMods() const {return reqs_;}
-	virtual unsigned int GetVersion() const {return version_;}
-	virtual bool GiveReqMods(const std::vector<boost::shared_ptr<Module> >& reqMods);
-	virtual bool GiveConfigData(const std::map<std::string, std::string>& configData);
-	virtual void RandomInit(TGenome& genome) const;
-	virtual void Mutate(TGenome& genome) const;
-	virtual void Cross(TGenome& genome1, TGenome& genome2) const;
-	virtual void AltOp(TGenome& genome) const;
-	virtual void Save(std::ostream& os, TGenome& genome, bool textualFormat = true) const;
-	virtual void Load(std::istream& is, TGenome& genome, bool textualFormat = true) const;
-
-private:
-	/// Nombre del módulo
-	static const std::string name_;
-
-	/// ID del módulo
-	static const Poco::UUID id_;
-
-	/// Versión del módulo
-	static const unsigned int version_;
-
-	/// IDs de los módulos requeridos
-	static const std::vector<Req> reqs_;
+	/// Continúa la construcción
+	EOK_CC,
+	/// Determina el tipo de un componente
+	EOK_CT,
+	/// Determina un valor
+	EOK_VAL,
+	/// Inválido
+	EOK_INVALID
 };
+
+// FIXME: Ponerle prefijo a los valores del tipo enumerado
+/// Códigos de operación
+enum EOpCode
+{
+	/// Componente con dos terminales (los únicos utilizados)
+	TWO_LEAD,
+	/// Resistor
+	R,
+	/// Capacitor
+	C,
+	/// Inductor
+	L,
+	/// División en serie
+	SERIES,
+	/// División en paralelo
+	PARALLEL,
+	/// Conexión dentro del subárbol
+	NODE,
+	/// Conexión a larga distancia
+	VIA,
+	/// Conexión a tierra
+	TWO_GROUND,
+	/// Final de la construcción
+	END,
+	/// Corte seguro
+	SAFE_CUT,
+	/// Da vuelta una arista
+	FLIP,
+	/// Valor no válido
+	EOC_INVALID
+};
+
+// FIXME: No corresponde aca
+/// Tipos de componente
+enum EComponentType
+{
+	RESISTOR, CAPACITOR, INDUCTOR, VSRC, WIRE, PROBE, INVALID
+};
+
+// FIXME: No corresponde aca
+// Forward para el tipo de digrafo
+struct Component;
+
+// FIXME: No corresponde aca
+/// Tipo del digrafo utilizado
+typedef boost::adjacency_list<boost::listS, boost::vecS, boost::bidirectionalS,
+	int, Component> TDigraph;
 
 #endif
