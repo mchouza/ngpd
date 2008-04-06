@@ -30,47 +30,41 @@
 //
 
 //=============================================================================
-// mod_genops_panfilter.h
+// ops_module.h
 //-----------------------------------------------------------------------------
 // Creado por Mariano M. Chouza | Agregado a NGPD el 6 de abril de 2008
 //=============================================================================
 
-#ifndef MOD_GENOPS_PANFILTER_H
-#define MOD_GENOPS_PANFILTER_H
+#ifndef OPS_MODULE_H
+#define OPS_MODULE_H
 
-#include <ops_module.h>
+#include "module.h"
+#include <genome.h>
 
-/// Clase del módulo encargado de operar con el genoma (mutarlo,
-/// hacer cruzas, etc)
-class MODULE_API ModGenOpsPAnFilter : public OpsModule
+/// Base abstracta para los módulos encargados de generar, mutar y cruzar los
+/// genomas
+class MODULE_API OpsModule : public Module
 {
 public:
-	// Requeridos por la interfaz
-	virtual const std::string& GetName() const {return name_;};
-	virtual const Poco::UUID& GetID() const {return id_;}
-	virtual const std::vector<Req>& GetReqMods() const {return reqs_;}
-	virtual unsigned int GetVersion() const {return version_;}
-	virtual bool GiveReqMods(const std::vector<boost::shared_ptr<Module> >& reqMods);
-	virtual bool GiveConfigData(const std::map<std::string, std::string>& configData);
-	virtual void RandomInit(TGenome& genome) const;
-	virtual void Mutate(TGenome& genome) const;
-	virtual void Cross(TGenome& genome1, TGenome& genome2) const;
-	virtual void AltOp(TGenome& genome) const;
-	virtual void Save(std::ostream& os, TGenome& genome, bool textualFormat = true) const;
-	virtual void Load(std::istream& is, TGenome& genome, bool textualFormat = true) const;
+	/// Inicializa un genoma en forma aleatoria
+	virtual void RandomInit(TGenome& genome) const = 0;
 
-private:
-	/// Nombre del módulo
-	static const std::string name_;
+	/// Muta un genoma
+	virtual void Mutate(TGenome& genome) const = 0;
 
-	/// ID del módulo
-	static const Poco::UUID id_;
+	/// Cruza un genoma con otro
+	virtual void Cross(TGenome& genome1, TGenome& genome2) const = 0;
 
-	/// Versión del módulo
-	static const unsigned int version_;
+	/// Realiza un operación de alteración
+	virtual void AltOp(TGenome& genome) const = 0;
 
-	/// IDs de los módulos requeridos
-	static const std::vector<Req> reqs_;
+	/// Guarda un genoma en una stream
+	virtual void Save(std::ostream& os, TGenome& genome,
+		bool textualFormat = true) const = 0;
+
+	/// Carga un genoma a partir de una stream
+	virtual void Load(std::istream& is, TGenome& genome,
+		bool textualFormat = true) const = 0;
 };
 
 #endif

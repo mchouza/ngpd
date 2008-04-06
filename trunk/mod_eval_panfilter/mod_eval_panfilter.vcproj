@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="p:\Thesis\gp_gen_daemon;p:\poco\Foundation\include;P:\Thesis\common;p:\boost;p:\Thesis\mod_spice;p:\unordered;p:\profiler"
+				AdditionalIncludeDirectories="p:\poco\Foundation\include;p:\boost;p:\unordered;p:\profiler;..\common"
 				PreprocessorDefinitions="MODULE_EXPORTS;POCO_DLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -119,7 +119,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="p:\Thesis\gp_gen_daemon;p:\poco\Foundation\include;P:\Thesis\common;p:\boost;p:\Thesis\mod_spice;p:\unordered;p:\profiler"
+				AdditionalIncludeDirectories="p:\poco\Foundation\include;..\common;p:\boost;p:\unordered;p:\profiler"
 				PreprocessorDefinitions="MODULE_EXPORTS;POCO_DLL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"

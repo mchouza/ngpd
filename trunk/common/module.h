@@ -30,47 +30,75 @@
 //
 
 //=============================================================================
-// mod_genops_panfilter.h
+// module.h
 //-----------------------------------------------------------------------------
 // Creado por Mariano M. Chouza | Agregado a NGPD el 6 de abril de 2008
 //=============================================================================
 
-#ifndef MOD_GENOPS_PANFILTER_H
-#define MOD_GENOPS_PANFILTER_H
+#ifndef MODULE_H
+#define MODULE_H
 
-#include <ops_module.h>
+#include <string>
+#include <map>
+#include <vector>
+#include <boost/shared_ptr.hpp>
+#include <Poco/Exception.h>
+#include <Poco/UUID.h>
 
-/// Clase del módulo encargado de operar con el genoma (mutarlo,
-/// hacer cruzas, etc)
-class MODULE_API ModGenOpsPAnFilter : public OpsModule
+#if defined(WIN32) && defined(POCO_DLL)
+	#ifdef MODULE_EXPORTS
+		#define MODULE_API _declspec(dllexport)
+	#else
+		#define MODULE_API _declspec(dllimport)
+	#endif
+#endif
+
+#ifndef MODULE_API
+	#define MODULE_API
+#endif
+
+class MODULE_API Module
 {
 public:
-	// Requeridos por la interfaz
-	virtual const std::string& GetName() const {return name_;};
-	virtual const Poco::UUID& GetID() const {return id_;}
-	virtual const std::vector<Req>& GetReqMods() const {return reqs_;}
-	virtual unsigned int GetVersion() const {return version_;}
-	virtual bool GiveReqMods(const std::vector<boost::shared_ptr<Module> >& reqMods);
-	virtual bool GiveConfigData(const std::map<std::string, std::string>& configData);
-	virtual void RandomInit(TGenome& genome) const;
-	virtual void Mutate(TGenome& genome) const;
-	virtual void Cross(TGenome& genome1, TGenome& genome2) const;
-	virtual void AltOp(TGenome& genome) const;
-	virtual void Save(std::ostream& os, TGenome& genome, bool textualFormat = true) const;
-	virtual void Load(std::istream& is, TGenome& genome, bool textualFormat = true) const;
+	/// Excepciones relativas a los módulos
+	class Exception : public Poco::Exception
+	{
+	public:
+		Exception(const std::string& msg) : Poco::Exception(msg) {}
+	};
+	
+	/// Constructor.
+	Module() {}
 
-private:
-	/// Nombre del módulo
-	static const std::string name_;
+	/// Destructor.
+	virtual ~Module() {}
 
-	/// ID del módulo
-	static const Poco::UUID id_;
+	/// Tipo de un requerimiento: par ID - versión
+	typedef std::pair<Poco::UUID, unsigned int> Req;
 
-	/// Versión del módulo
-	static const unsigned int version_;
+	/// Devuelve el nombre del módulo.
+	virtual const std::string& GetName() const = 0;
 
-	/// IDs de los módulos requeridos
-	static const std::vector<Req> reqs_;
+	/// Devuelve el UUID del módulo
+	virtual const Poco::UUID& GetID() const = 0;
+
+	/// Devuelve la versión
+	virtual unsigned int GetVersion() const = 0;
+
+	/// Devuelve un vector con los ids y versiones de los módulos que 
+	/// requiere para poder ejecutarse.
+	virtual const std::vector<Req>& GetReqMods() const = 0;
+
+	/// Le pasa un map con pares clave - valor, indicando valores requeridos
+	/// para configurar el módulo.
+	/// Devuelve true en caso de que tenga todo lo que requiera y false
+	/// en caso contrario.
+	virtual bool GiveConfigData(const std::map<std::string, std::string>& configData) = 0;
+	
+	/// Le da los módulos que necesita.
+	/// Devuelve true si puede funcionar con lso que le dimos, false
+	/// en caso contrario.
+	virtual bool GiveReqMods(const std::vector<boost::shared_ptr<Module> >& reqMods) = 0;
 };
 
 #endif

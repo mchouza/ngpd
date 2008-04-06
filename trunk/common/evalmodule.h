@@ -30,47 +30,28 @@
 //
 
 //=============================================================================
-// mod_genops_panfilter.h
+// evalmodule.h
 //-----------------------------------------------------------------------------
 // Creado por Mariano M. Chouza | Agregado a NGPD el 6 de abril de 2008
 //=============================================================================
 
-#ifndef MOD_GENOPS_PANFILTER_H
-#define MOD_GENOPS_PANFILTER_H
+#ifndef EVALMODULE_H
+#define EVALMODULE_H
 
-#include <ops_module.h>
+#include "module.h"
+#include <genome.h>
 
-/// Clase del módulo encargado de operar con el genoma (mutarlo,
-/// hacer cruzas, etc)
-class MODULE_API ModGenOpsPAnFilter : public OpsModule
+/// Base abstracta de las clases de los módulos de evaluación
+class MODULE_API EvalModule : public Module
 {
 public:
-	// Requeridos por la interfaz
-	virtual const std::string& GetName() const {return name_;};
-	virtual const Poco::UUID& GetID() const {return id_;}
-	virtual const std::vector<Req>& GetReqMods() const {return reqs_;}
-	virtual unsigned int GetVersion() const {return version_;}
-	virtual bool GiveReqMods(const std::vector<boost::shared_ptr<Module> >& reqMods);
-	virtual bool GiveConfigData(const std::map<std::string, std::string>& configData);
-	virtual void RandomInit(TGenome& genome) const;
-	virtual void Mutate(TGenome& genome) const;
-	virtual void Cross(TGenome& genome1, TGenome& genome2) const;
-	virtual void AltOp(TGenome& genome) const;
-	virtual void Save(std::ostream& os, TGenome& genome, bool textualFormat = true) const;
-	virtual void Load(std::istream& is, TGenome& genome, bool textualFormat = true) const;
+	/// Evalúa un genoma dando un valor en el rango entre 0 y 1
+	/// 0 corresponde a inválido o totalmente inadecuado
+	/// 1 corresponde a adecuación perfecta
+	virtual double EvaluateGenome(const TGenome& genome) const = 0;
 
-private:
-	/// Nombre del módulo
-	static const std::string name_;
-
-	/// ID del módulo
-	static const Poco::UUID id_;
-
-	/// Versión del módulo
-	static const unsigned int version_;
-
-	/// IDs de los módulos requeridos
-	static const std::vector<Req> reqs_;
+	/// Muestra un individuo en una forma útil para su aplicación
+	virtual void ShowIndiv(std::ostream& os, const TGenome& genome) const = 0;
 };
 
 #endif
