@@ -1,0 +1,219 @@
+#include "component_namer.h"
+#include "writing_head.h"
+
+using boost::add_edge;
+using boost::graph_traits;
+using boost::remove_edge;
+
+WritingHead::TWHLIt WritingHead::SetComponent(WritingHead::TWHList &whList,
+											  WritingHead::TWHLIt whIt,
+											  const Component &comp)
+{
+	// Modifico la propiedad de la arista asociada
+	whIt->digraph_[whIt->edgeRef_] = comp;
+
+	// El iterador no cambia, así que lo devuelvo tal cual
+	return whIt;
+}
+
+WritingHead::TWHLIt WritingHead::Flip(WritingHead::TWHList &whList,
+									  WritingHead::TWHLIt whIt)
+{
+	// Obtengo lso descriptores de salida y llegada
+	graph_traits<TDigraph>::vertex_descriptor srcVD, tgtVD;
+	srcVD = source(whIt->edgeRef_, whIt->digraph_);
+	tgtVD = target(whIt->edgeRef_, whIt->digraph_);
+	
+	// Agrego una nueva arista al revés que la anterior y con sus mismas
+	// propiedades
+	graph_traits<TDigraph>::edge_descriptor newED;
+	bool dummy;
+	tie(newED, dummy) = add_edge(tgtVD, srcVD,
+		whIt->digraph_[whIt->edgeRef_], whIt->digraph_);
+
+	// Borro la arista original
+	remove_edge(whIt->edgeRef_, whIt->digraph_);
+
+	// Cambio la referencia para que apunte a la nueva arista
+	whIt->edgeRef_ = newED;
+
+	// El iterador es el mismo, ya que la writing head misma fue modificada
+	return whIt;
+}
+
+void WritingHead::SafeCut(WritingHead::TWHList &whList,
+						  WritingHead::TWHLIt whIt)
+{
+	// Obtengo ambos vértices
+	graph_traits<TDigraph>::vertex_descriptor srcVD, tgtVD;
+	srcVD = source(whIt->edgeRef_, whIt->digraph_);
+	tgtVD = target(whIt->edgeRef_, whIt->digraph_);
+	
+	// Obtengo el grado total de ambos vértices
+	size_t srcDegree = in_degree(srcVD, whIt->digraph_) +
+		out_degree(srcVD, whIt->digraph_);
+	size_t tgtDegree = in_degree(tgtVD, whIt->digraph_) +
+		out_degree(tgtVD, whIt->digraph_);
+
+	// Si el grado de ambos es mayor o igual que 3, es seguro cortar
+	if (srcDegree >= 3 && tgtDegree >= 3)
+	{
+		// Es el caso, borro la arista
+		remove_edge(whIt->edgeRef_, whIt->digraph_);
+	}
+
+	// De todas formas, se elimina de las cabezas de escritura y no devuelve
+	// nada
+	whList.erase(whIt);
+}
+
+WritingHead::TWHLItPair WritingHead::SeriesDiv(WritingHead::TWHList &whList,
+											   WritingHead::TWHLIt whIt,
+											   ComponentNamer& compNamer)
+{
+	// Crea un nuevo vértice
+	graph_traits<TDigraph>::vertex_descriptor newVD;
+	newVD = add_vertex(whIt->digraph_);
+
+	// Obtiene los otros dos vértices
+	graph_traits<TDigraph>::vertex_descriptor srcVD, tgtVD;
+	srcVD = source(whIt->edgeRef_, whIt->digraph_);
+	tgtVD = target(whIt->edgeRef_, whIt->digraph_);
+
+	// Arma las dos nuevas aristas
+	graph_traits<TDigraph>::edge_descriptor firstED, secondED;
+	bool dummy;
+	tie(firstED, dummy) = add_edge(srcVD, newVD, whIt->digraph_);
+	tie(secondED, dummy) = add_edge(newVD, tgtVD, whIt->digraph_);
+
+	// Les agrega una nueva propiedad creada con el valor del componente
+	// adecuadamente modificado
+	Component comp = whIt->digraph_[whIt->edgeRef_];
+	Component newComp = comp.SeriesDivide(compNamer);
+	whIt->digraph_[firstED] = comp;
+	whIt->digraph_[secondED] = newComp;
+
+	// Borra la vieja arista
+	remove_edge(whIt->edgeRef_, whIt->digraph_);
+
+	// Agrega dos cabezas nuevas a la lista, una para cada arista
+	whList.push_back(WritingHead(whIt->digraph_, firstED));
+	whList.push_back(WritingHead(whIt->digraph_, secondED));
+
+	// Borra la cabeza de escritura original
+	whList.erase(whIt);
+
+	// Devuelve el par con los dos iteradores
+	TWHLIt it = whList.end();
+	TWHLItPair ret;
+	get<1>(ret) = --it;
+	get<0>(ret) = --it;
+	return ret;
+}
+
+WritingHead::TWHLItQuad WritingHead::ParallelDiv(WritingHead::TWHList &whList,
+												 WritingHead::TWHLIt whIt,
+												 ComponentNamer& compNamer)
+{
+	// Crea dos nuevos vértices
+	graph_traits<TDigraph>::vertex_descriptor newSrcVD, newTgtVD;
+	newSrcVD = add_vertex(whIt->digraph_);
+	newTgtVD = add_vertex(whIt->digraph_);
+
+	// Obtiene los otros dos vértices
+	graph_traits<TDigraph>::vertex_descriptor srcVD, tgtVD;
+	srcVD = source(whIt->edgeRef_, whIt->digraph_);
+	tgtVD = target(whIt->edgeRef_, whIt->digraph_);
+
+	// FIXME: No cambia donde están conectados los otros componentes
+	// Eso puede tener alguna consecuencia negativa  en cuanto a la variedad
+	// de topologías que puedan ser alcanzadas.
+
+	// Agrega la arista con el otro componente y las dos aristas de
+	// interconexión
+	graph_traits<TDigraph>::edge_descriptor newCompED, connWithSrcED,
+		connWithTgtED;
+	bool dummy;
+	tie(newCompED, dummy) = add_edge(newSrcVD, newTgtVD, whIt->digraph_);
+	tie(connWithSrcED, dummy) = add_edge(srcVD, newSrcVD, whIt->digraph_);
+	tie(connWithTgtED, dummy) = add_edge(tgtVD, newTgtVD, whIt->digraph_);
+
+	// Pone el nuevo valor de los componentes
+	Component newComp =
+		whIt->digraph_[whIt->edgeRef_].ParallelDivide(compNamer);
+	Component srcWire(WIRE, 0.0, compNamer.GetComponentName(WIRE));
+	Component tgtWire(WIRE, 0.0, compNamer.GetComponentName(WIRE));
+	whIt->digraph_[newCompED] = newComp;
+	whIt->digraph_[connWithSrcED] = srcWire;
+	whIt->digraph_[connWithTgtED] = tgtWire;
+
+	// Agrego tres cabezas nuevas
+	whList.push_back(WritingHead(whIt->digraph_, newCompED));
+	whList.push_back(WritingHead(whIt->digraph_, connWithSrcED));
+	whList.push_back(WritingHead(whIt->digraph_, connWithTgtED));
+
+	// Devuelvo cuatro iteradores
+	TWHLItQuad ret;
+	TWHLIt it = whList.end();
+	get<3>(ret) = --it;
+	get<2>(ret) = --it;
+	get<1>(ret) = --it;
+	get<0>(ret) = whIt;
+	return ret;
+}
+
+WritingHead::TWHLItPair WritingHead::TwoGround(WritingHead::TWHList &whList,
+											   WritingHead::TWHLIt whIt,
+											   ComponentNamer& compNamer)
+{
+	// Crea un nuevo vértice
+	graph_traits<TDigraph>::vertex_descriptor newVD;
+	newVD = add_vertex(whIt->digraph_);
+
+	// Obtiene los otros dos vértices
+	graph_traits<TDigraph>::vertex_descriptor srcVD, tgtVD;
+	srcVD = source(whIt->edgeRef_, whIt->digraph_);
+	tgtVD = target(whIt->edgeRef_, whIt->digraph_);
+
+	// Obtiene el vértice de tierra
+	graph_traits<TDigraph>::vertex_descriptor groundVD;
+	groundVD = 0;
+
+	// Arma las dos nuevas aristas igual que el serie
+	graph_traits<TDigraph>::edge_descriptor firstED, secondED;
+	bool dummy;
+	tie(firstED, dummy) = add_edge(srcVD, newVD, whIt->digraph_);
+	tie(secondED, dummy) = add_edge(newVD, tgtVD, whIt->digraph_);
+
+	// Arma una arista a tierra 
+	graph_traits<TDigraph>::edge_descriptor toGroundED;
+	tie(toGroundED, dummy) = add_edge(newVD, groundVD, whIt->digraph_);
+
+	// Les agrega una nueva propiedad creada con el valor del componente
+	// adecuadamente modificado
+	Component comp = whIt->digraph_[whIt->edgeRef_];
+	Component newComp = comp.SeriesDivide(compNamer);
+	whIt->digraph_[firstED] = comp;
+	whIt->digraph_[secondED] = newComp;
+
+	// Agrega la propiedad a la arista a tierra
+	whIt->digraph_[toGroundED] =
+		Component(WIRE, 0.0, compNamer.GetComponentName(WIRE));
+
+	// Borra la vieja arista
+	remove_edge(whIt->edgeRef_, whIt->digraph_);
+
+	// Agrega dos cabezas nuevas a la lista, una para cada arista
+	whList.push_back(WritingHead(whIt->digraph_, firstED));
+	whList.push_back(WritingHead(whIt->digraph_, secondED));
+
+	// Borra la cabeza de escritura original
+	whList.erase(whIt);
+
+	// Devuelve el par con los dos iteradores
+	TWHLIt it = whList.end();
+	TWHLItPair ret;
+	get<1>(ret) = --it;
+	get<0>(ret) = --it;
+	return ret;
+}
